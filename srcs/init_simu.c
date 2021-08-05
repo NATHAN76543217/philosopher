@@ -1,5 +1,9 @@
 #include "philo.h"
 
+/*
+** Dump simulation config
+*/
+
 static void	start_game_info(t_philo_simu* simu)
 {
 	printf("\n---- philo simuation ----\n\n");
@@ -15,33 +19,30 @@ static void	start_game_info(t_philo_simu* simu)
 	return ;
 }
 
-int		clear_all(t_philo_simu *simu)
-{
-	int i;
+/*
+** Check if the simulation's settings are correct 
+*/
 
-	i = -1;
-	if (simu->philos)
-		free(simu->philos);
-	if (simu->forks)
-		free(simu->forks);
-	while (++i < simu->nb_fork)
-		if (pthread_mutex_destroy(&(simu->forks[i])) != SUCCESS)
-			return error_msg("mutex destruction failed\n", SYS_ERROR);
-	free(simu);
-	#ifdef DEBUG
-		printf("Simulation cleared.\n");
-	#endif
-	return SUCCESS;
-}
-
-int			check_param_validity(t_philo_simu *simu)
+static int	check_param_validity(t_philo_simu *simu)
 {
 	if (simu->number_of_philosopher <= 0)
 		return error_msg("You cannot have less than 1 philosopher.\n", ARGUMENT_ERROR);
 	else if (simu->time_to_die <= 0)
 		return error_msg("You cannot have a 'time_to_die' value less or equal than 0.\n", ARGUMENT_ERROR);
+	else if (simu->time_to_eat <= 0)
+		return error_msg("You cannot have a 'time_to_eat' value less or equal than 0.\n", ARGUMENT_ERROR);
+	else if (simu->time_to_sleep <= 0)
+		return error_msg("You cannot have a 'time_to_sleep' value less or equal than 0.\n", ARGUMENT_ERROR);
+	else if (simu->max_eating < -1)
+		return error_msg("You cannot have a 'number_of_times_each_philosopher_must_eat' value less than -1.\n", ARGUMENT_ERROR);
+	else if (simu->nb_fork < 2)
+		return error_msg("You cannot have a number of forks less than 2.\nThis behavior is unexpected, please report us the problem.\n", SYS_ERROR);
 	return SUCCESS;
 }
+
+/*
+** Initialise simulation's mutex
+*/
 
 static int	mutex_initialisation(t_philo_simu *simu)
 {
@@ -55,6 +56,10 @@ static int	mutex_initialisation(t_philo_simu *simu)
 		return error_msg("mutex initialisation failed\n", SYS_ERROR);
 	return SUCCESS;
 }
+
+/*
+** Init simulation with program params
+*/
 
 int			init_simu(int ac, char**av, t_philo_simu** simulation)
 {

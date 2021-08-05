@@ -1,70 +1,11 @@
 #include "philo.h"
 
-static int	shouldStopSimu(t_philo *philo)
-{
-	if (elapsedLastMeal(philo) > philo->simu->time_to_die)
-	{
-		#ifdef DEBUG
-			printf("%ld %d is starving.\n", elapsedStart(philo), philo->id);
-		#endif
-		return TRUE;
-	}
-	return !philo->simu->running;
-}
 
-static int	philo_eat(t_philo *philo)
-{
-	if ( shouldStopSimu(philo) )
-		return END_SIMULATION;
-	printf("%ld %d is eating\n", elapsedStart(philo), philo->id);
-	usleep(philo->simu->time_to_eat * 1000);
-	gettimeofday(philo->last_meal, NULL);
-	philo->eat_count++;
-	if (philo->eat_count == philo->simu->max_eating)
-	{
-		#ifdef DEBUG
-			printf("%ld %d has eat %d times. %d/%d\n", elapsedStart(philo), philo->id, philo->eat_count, philo->eat_count, philo->simu->max_eating);
-		#endif
-		return END_SIMULATION;
-	}	
-	return SUCCESS;
-}
+/*
+** Warn other philosophers to stop the simulation
+*/
 
-static int	philo_sleep(t_philo *philo)
-{
-	printf("%ld %d is sleeping\n", elapsedStart(philo), philo->id);
-	usleep(philo->simu->time_to_sleep * 1000);
-	if ( shouldStopSimu(philo) )
-		return END_SIMULATION;
-	return SUCCESS;
-}
-
-static int	takeFork(t_philo *philo)
-{
-	if (!pthread_mutex_lock(&(philo->simu->forks[philo->right_fork_id]) ))
-	{
-		#ifdef DEBUG
-			printf("%ld %d has taken a fork[%d]\n", elapsedStart(philo), philo->id, philo->right_fork_id);
-		#else
-			printf("%ld %d has taken a fork\n", elapsedStart(philo), philo->id);
-		#endif
-	}
-	else
-		return EXIT_FAILURE;
-
-	if (!pthread_mutex_lock(&(philo->simu->forks[philo->left_fork_id])))
-	{
-		#ifdef DEBUG
-			printf("%ld %d has taken a second fork[%d]\n", elapsedStart(philo), philo->id, philo->left_fork_id);
-		#else
-			printf("%ld %d has taken a fork\n", elapsedStart(philo), philo->id);
-		#endif
-		return SUCCESS;
-	}
-	return EXIT_FAILURE;
-}
-
-void		stop_simulation(t_philo *philo)
+static void	stop_simulation(t_philo *philo)
 {
 	pthread_mutex_lock(&(philo->simu->simu_m));
 	philo->simu->running = FALSE;
@@ -82,11 +23,16 @@ void		stop_simulation(t_philo *philo)
 	#endif
 }
 
+/*
+** Philosopher lifecycle
+*/
+
 static void	*routine(void* philosopher)
 {
 	int			ret_val;
-	t_philo*	philo = (t_philo *) philosopher;
-
+	t_philo*	philo;
+	
+	philo = (t_philo *) philosopher;
 	while(TRUE)
 	{
 		printf("%ld %d is thinking.\n", elapsedStart(philo), philo->id);
@@ -106,6 +52,10 @@ static void	*routine(void* philosopher)
 	return philo;
 }
 
+/*
+** Free a philosopher structure
+*/
+
 void		destroy_philosopher(t_philo *philo)
 {
 	if (!philo)
@@ -121,7 +71,10 @@ void		destroy_philosopher(t_philo *philo)
 	return ;
 }
 
-// init and launch a philosopher thread
+/*
+** init and launch a philosopher thread
+*/
+
 int     	create_philosopher(t_philo_simu* simu, int id)
 {
 	int			err;

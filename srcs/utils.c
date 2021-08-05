@@ -1,6 +1,9 @@
 #include "philo.h"
 
-// return number of milliseconds since the start of simulation
+/*
+** Return the number of milliseconds elapsed since the start of simulation
+*/
+
 long elapsedStart(t_philo *philo)
 {
 	struct timeval tInit;
@@ -13,7 +16,10 @@ long elapsedStart(t_philo *philo)
 	return ((sec - sec_ini) * 1000000 + (milli - milli_ini)) / 1000;
 }
 
-// return number of milliseconds since the lats meal
+/*
+** Return the number of milliseconds elapsed since the last meal
+*/
+
 long elapsedLastMeal(t_philo *philo)
 {
 	struct timeval tInit;
@@ -30,7 +36,9 @@ long elapsedLastMeal(t_philo *philo)
 	return  micro_s / 1000;
 }
 
-// ** The isdigit() function tests for a decimal digit character.
+/*
+** The isdigit() function tests for a decimal digit character.
+*/
 
 static int ft_isdigit(char c)
 {
@@ -66,6 +74,10 @@ int		ft_atoi(const char *str)
 	result *= sign;
 	return (result);
 }
+
+/*
+** The error_msg() function print a given error before returning a given value 
+*/
 
 int		error_msg(const char *str, int ret_value)
 {
