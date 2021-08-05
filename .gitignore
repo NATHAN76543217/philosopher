@@ -2,4 +2,5 @@
 *.dysim
 *.dSYM/
 .vscode
-philo
+philo/philo
+philo_bonus/philo_bonus
