@@ -3,8 +3,7 @@
 /*
 ** Check if simulation should be stop
 */
-
-static int	shouldStopSimu(t_philo *philo)
+static int	shouldStopSimu(const t_philo *philo)
 {
 	if (elapsedLastMeal(philo) > philo->simu->time_to_die)
 	{
@@ -19,7 +18,6 @@ static int	shouldStopSimu(t_philo *philo)
 /*
 ** Eating phase of a philosopher
 */
-
 int			philo_eat(t_philo *philo)
 {
 	if ( shouldStopSimu(philo) )
@@ -41,8 +39,7 @@ int			philo_eat(t_philo *philo)
 /*
 ** Sleeping phase of a philosopher
 */
-
-int			philo_sleep(t_philo *philo)
+int			philo_sleep(const t_philo *philo)
 {
 	printf("%ld %d is sleeping\n", elapsedStart(philo), philo->id);
 	usleep(philo->simu->time_to_sleep * 1000);
@@ -54,8 +51,7 @@ int			philo_sleep(t_philo *philo)
 /*
 ** Getting forks philosopher's phase
 */
-
-int			takeFork(t_philo *philo)
+int			takeFork(const t_philo *philo)
 {
 	if (!pthread_mutex_lock(&(philo->simu->forks[philo->right_fork_id]) ))
 	{

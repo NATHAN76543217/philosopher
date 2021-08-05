@@ -3,8 +3,7 @@
 /*
 ** Return the number of milliseconds elapsed since the start of simulation
 */
-
-long elapsedStart(t_philo *philo)
+long		elapsedStart(const t_philo *const philo)
 {
 	struct timeval tInit;
 
@@ -19,8 +18,7 @@ long elapsedStart(t_philo *philo)
 /*
 ** Return the number of milliseconds elapsed since the last meal
 */
-
-long elapsedLastMeal(t_philo *philo)
+long		elapsedLastMeal(const t_philo *const philo)
 {
 	struct timeval tInit;
 
@@ -39,8 +37,7 @@ long elapsedLastMeal(t_philo *philo)
 /*
 ** The isdigit() function tests for a decimal digit character.
 */
-
-static int ft_isdigit(char c)
+static int	ft_isdigit(const char c)
 {
 	return (c >= '0' && c <= '9');
 }
@@ -49,8 +46,7 @@ static int ft_isdigit(char c)
 ** The ft_atoi() function converts the initial portion of the string pointed
 ** to by str to int representation.
 */
-
-int		ft_atoi(const char *str)
+int			ft_atoi(const char *str)
 {
 	int		i;
 	int		sign;
@@ -78,8 +74,7 @@ int		ft_atoi(const char *str)
 /*
 ** The error_msg() function print a given error before returning a given value 
 */
-
-int		error_msg(const char *str, int ret_value)
+int			error_msg(const char *const str, const int ret_value)
 {
 	printf("%s", str);
 	return ret_value;

@@ -4,7 +4,6 @@
 /*
 ** Warn other philosophers to stop the simulation
 */
-
 static void	stop_simulation(t_philo *philo)
 {
 	pthread_mutex_lock(&(philo->simu->simu_m));
@@ -26,7 +25,6 @@ static void	stop_simulation(t_philo *philo)
 /*
 ** Philosopher lifecycle
 */
-
 static void	*routine(void* philosopher)
 {
 	int			ret_val;
@@ -53,9 +51,25 @@ static void	*routine(void* philosopher)
 }
 
 /*
+** Initialise all timestamp values in a philosopher
+*/
+static int	init_timestamps(t_philo *philo)
+{
+	struct timeval *timestamp[2];
+
+	if (( timestamp[0] = (struct timeval*) malloc( sizeof( struct timeval ))) == NULL
+	||	( timestamp[1] = (struct timeval*) malloc( sizeof( struct timeval ))) == NULL )
+			return error_msg("A memory error happen when malloc (philo)\n", MEMORY_ERROR);
+	gettimeofday(timestamp[0], NULL);
+	gettimeofday(timestamp[1], NULL);
+	philo->timestamp = timestamp[0];
+	philo->last_meal = timestamp[1];
+	return SUCCESS;
+}
+
+/*
 ** Free a philosopher structure
 */
-
 void		destroy_philosopher(t_philo *philo)
 {
 	if (!philo)
@@ -74,36 +88,22 @@ void		destroy_philosopher(t_philo *philo)
 /*
 ** init and launch a philosopher thread
 */
-
-int     	create_philosopher(t_philo_simu* simu, int id)
+int     	create_philosopher(t_philo_simu *simu, int id)
 {
-	int			err;
-	int			i;
-	t_philo*	philo;
-	struct timeval *timestamp[2];
+	int				err;
+	t_philo*		philo;
 
-	i = -1;
 	if ((philo = (t_philo *) malloc(sizeof(t_philo))) == NULL)
 		return error_msg("A memory error happen when malloc\n", MEMORY_ERROR);
 	philo->id = id + 1;
 	philo->simu = simu;
 	philo->eat_count = 0;
-	if ( simu->number_of_philosopher == 1 ) {
-		philo->right_fork_id = 0;
+	philo->right_fork_id = ( id % 2) ? id : (id + 1) % simu->number_of_philosopher;
+	philo->left_fork_id = ( id % 2) ? (id + 1) % simu->number_of_philosopher : id;
+	if ( simu->number_of_philosopher == 1 )
 		philo->left_fork_id = 1;
-	}
-	else {
-		philo->right_fork_id = ( id % 2) ? id : (id + 1) % simu->number_of_philosopher;
-		philo->left_fork_id = ( id % 2) ? (id + 1) % simu->number_of_philosopher : id;
-	}
-	while (++i < 2)
-	{
-		if (( timestamp[i] = (struct timeval*) malloc( sizeof( struct timeval ))) == NULL)
-			return error_msg("A memory error happen when malloc (philo)\n", MEMORY_ERROR);
-		gettimeofday(timestamp[i], NULL);
-	}
-	philo->timestamp = timestamp[0];
-	philo->last_meal = timestamp[1];
+	if ((err = init_timestamps(philo)) != SUCCESS)
+		return err;
 	#ifdef DEBUG
 		printf("start philosopher %d\n", philo->id);
 	#endif

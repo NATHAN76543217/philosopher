@@ -3,8 +3,7 @@
 /*
 ** Dump simulation config
 */
-
-static void	start_game_info(t_philo_simu* simu)
+static void	start_game_info(t_philo_simu const *simu)
 {
 	printf("\n---- philo simuation ----\n\n");
 	printf("number_of_philosophers = %d\n", simu->number_of_philosopher);
@@ -22,8 +21,7 @@ static void	start_game_info(t_philo_simu* simu)
 /*
 ** Check if the simulation's settings are correct 
 */
-
-static int	check_param_validity(t_philo_simu *simu)
+static int	check_param_validity(t_philo_simu const *simu)
 {
 	if (simu->number_of_philosopher <= 0)
 		return error_msg("You cannot have less than 1 philosopher.\n", ARGUMENT_ERROR);
@@ -43,7 +41,6 @@ static int	check_param_validity(t_philo_simu *simu)
 /*
 ** Initialise simulation's mutex
 */
-
 static int	mutex_initialisation(t_philo_simu *simu)
 {
 	int i;
@@ -60,8 +57,7 @@ static int	mutex_initialisation(t_philo_simu *simu)
 /*
 ** Init simulation with program params
 */
-
-int			init_simu(int ac, char**av, t_philo_simu** simulation)
+int			init_simu(int ac, char **av, t_philo_simu **const simulation)
 {
 	int				err;
 	t_philo_simu	*simu;

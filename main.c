@@ -3,7 +3,6 @@
 /*
 ** Free simulation structure
 */
-
 static int	clear_all(t_philo_simu *simu)
 {
 	int i;
@@ -26,7 +25,6 @@ static int	clear_all(t_philo_simu *simu)
 /*
 ** Wait for the simulation is ending before cleaning context
 */
-
 static int	wait_simulation_end(t_philo_simu *simu)
 {
 	int		i;
@@ -49,7 +47,6 @@ static int	wait_simulation_end(t_philo_simu *simu)
 /*
 ** Start simulation with the right number of philosophers
 */
-
 static int	start_simulation(t_philo_simu *simu)
 {
 	int i;
@@ -68,7 +65,6 @@ static int	start_simulation(t_philo_simu *simu)
 /*
 ** Program's entrypoint
 */
-
 int			main(int ac, char **av)
 {
 	int				err;

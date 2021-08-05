@@ -50,28 +50,25 @@ typedef struct		s_philo
 */
 int		ft_atoi(const char *str);
 int		error_msg(const char *str, int ret_value);
-long	elapsedLastMeal(t_philo *philo);
-long	elapsedStart(t_philo *philo);
+long	elapsedStart(const t_philo *philo);
+long	elapsedLastMeal(const t_philo *philo);
 
 /*
 ** init_simu.c
 */
-
-int		init_simu(int ac, char** av, t_philo_simu** mPhilo);
+int		init_simu(int ac, char **av, t_philo_simu** simulation);
 
 /*
 ** philosopher.c
 */
-
-int		create_philosopher(t_philo_simu* simu, int i);
-void	destroy_philosopher(t_philo* philo);
+int     create_philosopher(t_philo_simu *simu, int id);
+void	destroy_philosopher(t_philo *philo);
 
 /*
 ** actions.c
 */
-
-int		takeFork(t_philo *philo);
-int		philo_sleep(t_philo *philo);
+int		takeFork(const t_philo *philo);
+int		philo_sleep(const t_philo *philo);
 int		philo_eat(t_philo *philo);
 
 #endif		//PHILO_H
