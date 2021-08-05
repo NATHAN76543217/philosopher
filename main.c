@@ -20,7 +20,7 @@ static int	clear_all(t_philo_simu *simu)
 	#ifdef DEBUG
 		printf("Simulation cleared.\n");
 	#endif
-	return clear_all( simu );
+	return SUCCESS;
 }
 
 /*
@@ -43,7 +43,7 @@ static int	wait_simulation_end(t_philo_simu *simu)
 			printf("thread %d joined\n", i);
 		#endif
 	}
-	return SUCCESS;
+	return clear_all(simu);
 }
 
 /*
@@ -78,7 +78,7 @@ int			main(int ac, char **av)
 	if (( err = init_simu(ac, av, &simu)) != SUCCESS
 	||	( err = start_simulation(simu)) != SUCCESS
 	||	( err = wait_simulation_end(simu)) != SUCCESS )
-		return 	printf("Program return %d\n", err);
+		return 	printf("Program exit with return code: %d\n", err);
 	printf("Out of program\n");
 	return SUCCESS;
 }
