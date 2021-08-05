@@ -67,7 +67,7 @@ int			init_simu(int ac, char**av, t_philo_simu** simulation)
 	t_philo_simu	*simu;
 
 	if (ac < 5 || ac > 6 )
-        return error_msg("Bad number of arguments\n help:\t./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n\n", ARGUMENT_ERROR);
+        return error_msg("Bad number of arguments\n\n\tUsage:\t./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n\n", ARGUMENT_ERROR);
 	if (( simu = (t_philo_simu*) malloc(sizeof(t_philo_simu))) == NULL)
 		return error_msg("A memory error happen when malloc (simu)\n", MEMORY_ERROR);
 	memset(simu, 0, sizeof(t_philo_simu));
