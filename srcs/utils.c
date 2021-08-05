@@ -8,11 +8,8 @@ long elapsedStart(t_philo *philo)
 	gettimeofday(&tInit, NULL);
 	long sec_ini = (long) philo->timestamp->tv_sec; 
 	long milli_ini = (long) philo->timestamp->tv_usec;
-	// printf("init == %ld %ld\n", sec_ini, milli_ini);
 	long sec = (long) tInit.tv_sec; 
 	long milli = (long) tInit.tv_usec;
-	// printf("now  == %ld %ld\n", sec, milli);
-	// printf("elap == %ld %ld\n", sec - sec_ini, milli - milli_ini);
 	return ((sec - sec_ini) * 1000000 + (milli - milli_ini)) / 1000;
 }
 
@@ -26,7 +23,11 @@ long elapsedLastMeal(t_philo *philo)
 	long milli_ini = (long) philo->last_meal->tv_usec;
 	long sec = (long) tInit.tv_sec; 
 	long milli = (long) tInit.tv_usec;
-	return ((sec - sec_ini) * 1000000 + (milli - milli_ini)) / 1000;
+	long micro_s = ((sec - sec_ini) * 1000000 + (milli - milli_ini));
+	#ifdef DEBUG
+		printf("%ld %d since last meal: %ld,%ld.\n", elapsedStart(philo), philo->id, micro_s / 1000, micro_s % 1000);
+	#endif
+	return  micro_s / 1000;
 }
 
 // ** The isdigit() function tests for a decimal digit character.

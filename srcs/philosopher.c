@@ -1,27 +1,41 @@
 #include "philo.h"
 
-
-static int philo_eat(t_philo *philo)
+static int	shouldStopSimu(t_philo *philo)
 {
-	gettimeofday(philo->start_activity, NULL);
+	if (elapsedLastMeal(philo) > philo->simu->time_to_die)
+	{
+		#ifdef DEBUG
+			printf("%ld %d is starving.\n", elapsedStart(philo), philo->id);
+		#endif
+		return TRUE;
+	}
+	return !philo->simu->running;
+}
+
+static int	philo_eat(t_philo *philo)
+{
+	if ( shouldStopSimu(philo) )
+		return END_SIMULATION;
 	printf("%ld %d is eating\n", elapsedStart(philo), philo->id);
 	usleep(philo->simu->time_to_eat * 1000);
 	gettimeofday(philo->last_meal, NULL);
 	philo->eat_count++;
 	if (philo->eat_count == philo->simu->max_eating)
 	{
-		printf("%ld %d has eat %d times. %d/%d\n", elapsedStart(philo), philo->id, philo->eat_count, philo->eat_count, philo->simu->max_eating);
+		#ifdef DEBUG
+			printf("%ld %d has eat %d times. %d/%d\n", elapsedStart(philo), philo->id, philo->eat_count, philo->eat_count, philo->simu->max_eating);
+		#endif
 		return END_SIMULATION;
 	}	
 	return SUCCESS;
 }
 
-static int philo_sleep(t_philo *philo)
+static int	philo_sleep(t_philo *philo)
 {
-	gettimeofday(philo->start_activity, NULL);
 	printf("%ld %d is sleeping\n", elapsedStart(philo), philo->id);
 	usleep(philo->simu->time_to_sleep * 1000);
-	gettimeofday(philo->last_meal, NULL);
+	if ( shouldStopSimu(philo) )
+		return END_SIMULATION;
 	return SUCCESS;
 }
 
@@ -29,95 +43,112 @@ static int	takeFork(t_philo *philo)
 {
 	if (!pthread_mutex_lock(&(philo->simu->forks[philo->right_fork_id]) ))
 	{
-		printf("%ld %d has taken a fork[%d]\n", elapsedStart(philo), philo->id, philo->left_fork_id);
+		#ifdef DEBUG
+			printf("%ld %d has taken a fork[%d]\n", elapsedStart(philo), philo->id, philo->right_fork_id);
+		#else
+			printf("%ld %d has taken a fork\n", elapsedStart(philo), philo->id);
+		#endif
 	}
 	else
 		return EXIT_FAILURE;
 
 	if (!pthread_mutex_lock(&(philo->simu->forks[philo->left_fork_id])))
 	{
-		printf("%ld %d has taken a second fork[%d]\n", elapsedStart(philo), philo->id, philo->right_fork_id);
+		#ifdef DEBUG
+			printf("%ld %d has taken a second fork[%d]\n", elapsedStart(philo), philo->id, philo->left_fork_id);
+		#else
+			printf("%ld %d has taken a fork\n", elapsedStart(philo), philo->id);
+		#endif
 		return SUCCESS;
 	}
 	return EXIT_FAILURE;
 }
 
-static int	shouldStopSimu(t_philo *philo)
+void		stop_simulation(t_philo *philo)
 {
-	printf("%ld %d since last meal: %ld.\n", elapsedStart(philo), philo->id, elapsedLastMeal(philo));
-	if (elapsedLastMeal(philo) > philo->simu->time_to_die)
-	{
-		printf("%ld %d is starving.\n", elapsedStart(philo), philo->id);
-		return TRUE;
-	}
-	return !philo->simu->running;
+	pthread_mutex_lock(&(philo->simu->simu_m));
+	philo->simu->running = FALSE;
+	if ( philo->simu->max_eating != -1 && philo->eat_count < philo->simu->max_eating)
+		printf("%ld %d died. %d/%d\n", elapsedStart(philo), philo->id, philo->eat_count, philo->simu->max_eating);
+	else if ( philo->simu->max_eating != -1 )
+		printf("%ld %d number of eating max reached. %d/%d\n", elapsedStart(philo), philo->id, philo->eat_count, philo->simu->max_eating);
+	else
+		printf("%ld %d died.\n", elapsedStart(philo), philo->id);
+	pthread_mutex_unlock(&(philo->simu->simu_m));
+	#ifdef DEBUG
+		printf("End of simulation. for (%d)\n", philo->id);
+	#else
+		printf("End of simulation.\n");
+	#endif
 }
 
 static void	*routine(void* philosopher)
 {
+	int			ret_val;
 	t_philo*	philo = (t_philo *) philosopher;
 
 	while(TRUE)
 	{
 		printf("%ld %d is thinking.\n", elapsedStart(philo), philo->id);
-		if (takeFork(philo) == SUCCESS)
-		{
-			if (shouldStopSimu(philo) || philo_eat(philo) == END_SIMULATION)
-			{
-				pthread_mutex_unlock(&(philo->simu->forks[philo->left_fork_id]));
-				pthread_mutex_unlock(&(philo->simu->forks[philo->right_fork_id]));
-				break ;
-			}
-			pthread_mutex_unlock(&(philo->simu->forks[philo->left_fork_id]));
-			pthread_mutex_unlock(&(philo->simu->forks[philo->right_fork_id]));	
+		if (takeFork(philo) != SUCCESS)
+			continue ;
+		ret_val = philo_eat(philo);
+		pthread_mutex_unlock( &(philo->simu->forks[philo->left_fork_id]) );
+		pthread_mutex_unlock( &(philo->simu->forks[philo->right_fork_id]) );
+		#ifdef DEBUG
 			printf("%ld %d has release two forks[%d][%d]\n", elapsedStart(philo), philo->id, philo->left_fork_id, philo->right_fork_id);
-			philo_sleep(philo);
-			if (shouldStopSimu(philo))
-				break ;
-		}
+		#endif
+		if ( ret_val == END_SIMULATION || philo_sleep(philo) == END_SIMULATION)
+			break ;
 	}
-	if (!philo->simu->running)
-	{
-		printf("End of simulation. (not running) for (%d)\n", philo->id);
-		return NULL;
-	}
-	pthread_mutex_lock(&(philo->simu->simu_m));
-	philo->simu->running = FALSE;
-	if (philo->simu->max_eating != -1 && philo->eat_count < philo->simu->max_eating)
-		printf("%ld %d died.  %d/%d\n", elapsedStart(philo), philo->id, philo->eat_count, philo->simu->max_eating);
-	pthread_mutex_unlock(&(philo->simu->simu_m));
-	printf("End of simulation. for (%d)\n", philo->id);
-
-	return NULL;
+	if (philo->simu->running)
+		stop_simulation(philo);
+	return philo;
 }
 
+void		destroy_philosopher(t_philo *philo)
+{
+	if (!philo)
+		return ;
+	#ifdef DEBUG
+		printf("destroy philosopher %d\n", philo->id);
+	#endif
+	if ( philo->timestamp )
+		free( philo->timestamp );
+	if ( philo->last_meal )
+		free( philo->last_meal );
+	free(philo);
+	return ;
+}
 
 // init and launch a philosopher thread
-void     create_philosopher(t_philo_simu* simu, int i)
+int     	create_philosopher(t_philo_simu* simu, int id)
 {
 	int			err;
+	int			i;
 	t_philo*	philo;
+	struct timeval *timestamp[2];
 
-	philo = (t_philo *) malloc(sizeof(t_philo));
-	philo->id = i + 1;
-	printf("Creating philosopher %d.\n", philo->id);
-	philo->eat_count = 0;
-	philo->right_fork_id = i;
-	philo->left_fork_id = (i + 1) % simu->number_of_philosopher;
+	i = -1;
+	if ((philo = (t_philo *) malloc(sizeof(t_philo))) == NULL)
+		return error_msg("A memory error happen when malloc\n", MEMORY_ERROR);
+	philo->id = id + 1;
 	philo->simu = simu;
-	struct timeval *timestamp = (struct timeval*) malloc(sizeof(struct timeval));
-	struct timeval *last_meal = (struct timeval*) malloc(sizeof(struct timeval));
-	struct timeval *start_activity = (struct timeval*) malloc(sizeof(struct timeval));
-	gettimeofday(timestamp, NULL);
-	gettimeofday(last_meal, NULL);
-	gettimeofday(start_activity, NULL);
-	philo->timestamp = timestamp;
-	philo->last_meal = last_meal;
-	philo->start_activity = start_activity;
-	if ((err = pthread_create(&(simu->philos[i]), NULL, &routine, (void *)philo)) != 0)
+	philo->eat_count = 0;
+	philo->right_fork_id = ( id % 2) ? id : (id + 1) % simu->number_of_philosopher;
+	philo->left_fork_id = ( id % 2) ? (id + 1) % simu->number_of_philosopher : id;
+	while (++i < 2)
+	{
+		if (( timestamp[i] = (struct timeval*) malloc( sizeof( struct timeval ))) == NULL)
+			return error_msg("A memory error happen when malloc (philo)\n", MEMORY_ERROR);
+		gettimeofday(timestamp[i], NULL);
+	}
+	philo->timestamp = timestamp[0];
+	philo->last_meal = timestamp[1];
+	#ifdef DEBUG
+		printf("start philosopher %d\n", philo->id);
+	#endif
+	if ((err = pthread_create(&(simu->philos[id]), NULL, &routine, (void *)philo)) != 0)
 		   printf("\ncan't create thread :[%d]", err);
-	// if ((err = pthread_detach(simu->philos[i])))
-		// printf("\ncan't detach thread :[%d]", err);
-	printf("philo created [%d]\n", philo->id);
-	return ;
+	return SUCCESS;
 }

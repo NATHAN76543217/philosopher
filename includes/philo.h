@@ -13,58 +13,51 @@
 # define SUCCESS 0
 # define ARGUMENT_ERROR 1
 # define END_SIMULATION 2
+
 # define FALSE 0
 # define TRUE 1
 
-enum fork_state {
-	FREE,
-	USED
-};
+// # define DEBUG
 
-enum activities {
-	SLEEPING,
-	THINKING,
-	EATING
-};
-
-typedef struct s_philo_simu
+typedef struct		s_philo_simu
 {
-	int number_of_philosopher;
-	int time_to_die;
-	int time_to_eat;
-	int time_to_sleep;
-	int max_eating;
-	int running;
-	pthread_mutex_t *forks;
-	pthread_mutex_t simu_m; 
-	int nb_fork;
-	pthread_t *philos;
+	int				number_of_philosopher;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				max_eating;
+	int				running;
+	int				nb_fork;
+	pthread_t		*philos;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	simu_m; 
 
-}		t_philo_simu;
+}					t_philo_simu;
 
-typedef struct s_philo
+typedef struct		s_philo
 {
-	int		id;
-	int		right_fork_id;
-	int		left_fork_id;
-	int		eat_count;
-	// int		activity;
+	int				id;
+	int				right_fork_id;
+	int				left_fork_id;
+	int				eat_count;
 	struct timeval	*timestamp;
 	struct timeval	*last_meal;
-	struct timeval	*start_activity;
-	t_philo_simu *simu;
-}		t_philo;
+	t_philo_simu	*simu;
+}					t_philo;
 
 
-int		init_philo(int ac, char** av, t_philo_simu** mPhilo);
-void	create_philosopher(t_philo_simu* simu, int i);
-void	dump_game_info(t_philo_simu* mPhilo);
-long	elapsedLastMeal(t_philo *philo);
-long	elapsedStart(t_philo *philo);
-int		clear_all(t_philo_simu *simu);
+// utils.c
 int		ft_atoi(const char *str);
 int		error_msg(const char *str, int ret_value);
+long	elapsedLastMeal(t_philo *philo);
+long	elapsedStart(t_philo *philo);
 
+// init_philo.c
+int		init_philo(int ac, char** av, t_philo_simu** mPhilo);
+int		clear_all(t_philo_simu *simu);
 
+// philosopher.c
+int		create_philosopher(t_philo_simu* simu, int i);
+void	destroy_philosopher(t_philo* philo);
 
 #endif		//PHILO_H

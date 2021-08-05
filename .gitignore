@@ -1,0 +1,5 @@
+*.o
+*.dysim
+*.dSYM/
+.vscode
+philo

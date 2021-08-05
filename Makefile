@@ -46,7 +46,7 @@ all:	init $(NAME)
 
 init:
 	@ mkdir -p $(PATH_OBJ)/$(DIRS_LIST)
-	echo $(SRCS_FILES)
+# echo $(SRCS_FILES)
 
 # echo $(LIBFT_INC_FILES) $(LIBFT_INCS)
 

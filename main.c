@@ -2,55 +2,51 @@
 
 int	wait_simulation_end(t_philo_simu *simu)
 {
-	int i;
+	int		i;
+	int		err;
+	t_philo	*philo;
 
-	i = 0;
-	while (i < simu->number_of_philosopher)
+	i = -1;
+	while (++i < simu->number_of_philosopher)
 	{
-		if (pthread_join(simu->philos[i], NULL))
-			return SYS_ERROR;
-		printf("joined %d\n", i);
-		i++;
+		if ((err = pthread_join(simu->philos[i], (void * )&philo)) != SUCCESS)
+			return error_msg("Error when joining two threads.\n", SYS_ERROR);
+		destroy_philosopher(philo);
+		#ifdef DEBUG
+			printf("thread %d joined\n", i);
+		#endif
 	}
 	return SUCCESS;
 }
 
 int start_simulation(t_philo_simu *simu)
 {
-	int i = 0;
+	int i;
+	int	err;
 
-	while(i < simu->number_of_philosopher)
+	i = -1;
+	err = 0;
+	while(++i < simu->number_of_philosopher)
 	{
-		create_philosopher(simu, i);
-		i++;
+		if ((err = create_philosopher(simu, i)) != SUCCESS)
+			return printf("creat %d\n", err);
 	}
-	usleep(10000);
+	printf("Simuation started\n");
 	return SUCCESS;
 }
 
-void eat()
-{
-
-	// release fork
-}
 int main(int ac, char **av)
 {
-	t_philo_simu *simu = NULL;
-	int err;
-	// pthread_mutex_t lock;
+	int				err;
+	t_philo_simu	*simu;
 
-	// pthread_mutex_init(&lock, NULL);
-	if ((err = init_philo(ac, av, &simu)) != SUCCESS)
-		return err;
-	if ((err = start_simulation(simu)) != SUCCESS)
-		return err;
-	// dprintf(1, "Simulation start done.\n");
-	if ((err = wait_simulation_end(simu)) != SUCCESS)
-		return err;
-	dprintf(1, "Simulation done.\n");
-	clear_all(simu);
-	dprintf(1, "Simulation cleared.\n");
-
+	simu = NULL;
+	if (( err = init_philo(ac, av, &simu)) != SUCCESS
+	||	( err = start_simulation(simu)) != SUCCESS
+	||	( err = wait_simulation_end(simu)) != SUCCESS
+	||	( err = clear_all( simu )) != SUCCESS )
+		return 	printf("Program return %d\n", err);
+	printf("Out of program\n");
 	return SUCCESS;
 }
 // TODO add timestamp
