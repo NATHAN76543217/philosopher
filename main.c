@@ -25,11 +25,10 @@ int start_simulation(t_philo_simu *simu)
 	int	err;
 
 	i = -1;
-	err = 0;
 	while(++i < simu->number_of_philosopher)
 	{
 		if ((err = create_philosopher(simu, i)) != SUCCESS)
-			return printf("creat %d\n", err);
+			return err;
 	}
 	printf("Simuation started\n");
 	return SUCCESS;
@@ -41,12 +40,14 @@ int main(int ac, char **av)
 	t_philo_simu	*simu;
 
 	simu = NULL;
-	if (( err = init_philo(ac, av, &simu)) != SUCCESS
+	if (( err = init_simu(ac, av, &simu)) != SUCCESS
 	||	( err = start_simulation(simu)) != SUCCESS
 	||	( err = wait_simulation_end(simu)) != SUCCESS
 	||	( err = clear_all( simu )) != SUCCESS )
 		return 	printf("Program return %d\n", err);
 	printf("Out of program\n");
+	simu = NULL;
+	usleep(100000000);
 	return SUCCESS;
 }
 // TODO add timestamp

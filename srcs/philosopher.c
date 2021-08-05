@@ -110,14 +110,14 @@ void		destroy_philosopher(t_philo *philo)
 {
 	if (!philo)
 		return ;
-	#ifdef DEBUG
-		printf("destroy philosopher %d\n", philo->id);
-	#endif
 	if ( philo->timestamp )
 		free( philo->timestamp );
 	if ( philo->last_meal )
 		free( philo->last_meal );
 	free(philo);
+	#ifdef DEBUG
+		printf("philosopher %d destroyed.\n", philo->id);
+	#endif
 	return ;
 }
 
@@ -135,8 +135,14 @@ int     	create_philosopher(t_philo_simu* simu, int id)
 	philo->id = id + 1;
 	philo->simu = simu;
 	philo->eat_count = 0;
-	philo->right_fork_id = ( id % 2) ? id : (id + 1) % simu->number_of_philosopher;
-	philo->left_fork_id = ( id % 2) ? (id + 1) % simu->number_of_philosopher : id;
+	if ( simu->number_of_philosopher == 1 ) {
+		philo->right_fork_id = 0;
+		philo->left_fork_id = 1;
+	}
+	else {
+		philo->right_fork_id = ( id % 2) ? id : (id + 1) % simu->number_of_philosopher;
+		philo->left_fork_id = ( id % 2) ? (id + 1) % simu->number_of_philosopher : id;
+	}
 	while (++i < 2)
 	{
 		if (( timestamp[i] = (struct timeval*) malloc( sizeof( struct timeval ))) == NULL)

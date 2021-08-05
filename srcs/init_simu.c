@@ -34,7 +34,7 @@ int		clear_all(t_philo_simu *simu)
 	return SUCCESS;
 }
 
-int		check_param_validity(t_philo_simu *simu)
+int			check_param_validity(t_philo_simu *simu)
 {
 	if (simu->number_of_philosopher <= 0)
 		return error_msg("You cannot have less than 1 philosopher.\n", ARGUMENT_ERROR);
@@ -43,9 +43,21 @@ int		check_param_validity(t_philo_simu *simu)
 	return SUCCESS;
 }
 
-int		init_philo(int ac, char**av, t_philo_simu** simulation)
+static int	mutex_initialisation(t_philo_simu *simu)
 {
-	int				i;
+	int i;
+
+	i = -1;
+	while (++i < simu->nb_fork)
+		if (pthread_mutex_init(&(simu->forks[i]), NULL) != SUCCESS)
+			return error_msg("mutex initialisation failed\n", SYS_ERROR);
+	if (pthread_mutex_init(&(simu->simu_m), NULL) != SUCCESS)
+		return error_msg("mutex initialisation failed\n", SYS_ERROR);
+	return SUCCESS;
+}
+
+int			init_simu(int ac, char**av, t_philo_simu** simulation)
+{
 	int				err;
 	t_philo_simu	*simu;
 
@@ -54,7 +66,6 @@ int		init_philo(int ac, char**av, t_philo_simu** simulation)
 	if (( simu = (t_philo_simu*) malloc(sizeof(t_philo_simu))) == NULL)
 		return error_msg("A memory error happen when malloc (simu)\n", MEMORY_ERROR);
 	memset(simu, 0, sizeof(t_philo_simu));
-	i = -1;
 	simu->running = TRUE;
     simu->number_of_philosopher = ft_atoi(av[1]);
     simu->time_to_die = ft_atoi(av[2]);
@@ -65,13 +76,9 @@ int		init_philo(int ac, char**av, t_philo_simu** simulation)
 	if (( simu->philos = (pthread_t *) malloc( sizeof(pthread_t) * simu->number_of_philosopher )) == NULL
 	||	( simu->forks = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t) * simu->nb_fork)) == NULL)
 		return error_msg("A memory error happen when malloc (simu)\n", MEMORY_ERROR);
-	if ((err = check_param_validity(simu)))
+	if (( err = check_param_validity(simu) != SUCCESS )
+	||	( err = mutex_initialisation(simu)) != SUCCESS )
 		return err;
-	while (++i < simu->nb_fork)
-		if (pthread_mutex_init(&(simu->forks[i]), NULL) != SUCCESS)
-			return error_msg("mutex initialisation failed\n", SYS_ERROR);
-	if (pthread_mutex_init(&(simu->simu_m), NULL) != SUCCESS)
-		return error_msg("mutex initialisation failed\n", SYS_ERROR);
 	start_game_info(simu);
 	*simulation = simu;
     return SUCCESS;

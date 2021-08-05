@@ -52,8 +52,8 @@ int		error_msg(const char *str, int ret_value);
 long	elapsedLastMeal(t_philo *philo);
 long	elapsedStart(t_philo *philo);
 
-// init_philo.c
-int		init_philo(int ac, char** av, t_philo_simu** mPhilo);
+// init_simu.c
+int		init_simu(int ac, char** av, t_philo_simu** mPhilo);
 int		clear_all(t_philo_simu *simu);
 
 // philosopher.c
