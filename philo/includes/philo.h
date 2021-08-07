@@ -56,7 +56,7 @@ long	elapsedLastMeal(const t_philo *philo);
 /*
 ** init_simu.c
 */
-int		init_simu(int ac, char **av, t_philo_simu** simulation);
+int		init_simu(int ac, char **av, t_philo_simu * simu);
 
 /*
 ** philosopher.c

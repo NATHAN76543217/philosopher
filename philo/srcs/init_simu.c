@@ -5,7 +5,7 @@
 */
 static void	start_game_info(t_philo_simu const *simu)
 {
-	printf("\n---- philo simuation ----\n\n");
+	printf("\n---- philo simulation ----\n\n");
 	printf("number_of_philosophers = %d\n", simu->number_of_philosopher);
 	printf("time_to_die  = %d\n", simu->time_to_die);
 	printf("time_to_eat = %d\n", simu->time_to_eat);
@@ -57,17 +57,14 @@ static int	mutex_initialisation(t_philo_simu *simu)
 /*
 ** Init simulation with program params
 */
-int			init_simu(int ac, char **av, t_philo_simu **const simulation)
+int			init_simu(int ac, char **av, t_philo_simu *const simu)
 {
 	int				err;
-	t_philo_simu	*simu;
 
 	if (ac < 5 || ac > 6 )
         return error_msg("Bad number of arguments\n\n\tUsage:\t./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n\n", ARGUMENT_ERROR);
-	if (( simu = (t_philo_simu*) malloc(sizeof(t_philo_simu))) == NULL)
-		return error_msg("A memory error happen when malloc (simu)\n", MEMORY_ERROR);
 	memset(simu, 0, sizeof(t_philo_simu));
-	simu->running = TRUE;
+	(*simu).running = TRUE;
     simu->number_of_philosopher = ft_atoi(av[1]);
     simu->time_to_die = ft_atoi(av[2]);
 	simu->time_to_eat = ft_atoi(av[3]);
@@ -81,6 +78,5 @@ int			init_simu(int ac, char **av, t_philo_simu **const simulation)
 	||	( err = mutex_initialisation(simu)) != SUCCESS )
 		return err;
 	start_game_info(simu);
-	*simulation = simu;
     return SUCCESS;
 }

@@ -8,14 +8,13 @@ static int	clear_all(t_philo_simu *simu)
 	int i;
 
 	i = -1;
-	if (simu->philos)
-		free(simu->philos);
-	if (simu->forks)
-		free(simu->forks);
 	while (++i < simu->nb_fork)
 		if (pthread_mutex_destroy(&(simu->forks[i])) != SUCCESS)
 			return error_msg("mutex destruction failed\n", SYS_ERROR);
-	free(simu);
+	if (simu->forks)
+		free(simu->forks);
+	if (simu->philos)
+		free(simu->philos);
 	#ifdef DEBUG
 		printf("Simulation cleared.\n");
 	#endif
@@ -58,7 +57,7 @@ static int	start_simulation(t_philo_simu *simu)
 		if ((err = create_philosopher(simu, i)) != SUCCESS)
 			return err;
 	}
-	printf("Simuation started\n");
+	printf("Simulation started\n");
 	return SUCCESS;
 }
 
@@ -68,12 +67,11 @@ static int	start_simulation(t_philo_simu *simu)
 int			main(int ac, char **av)
 {
 	int				err;
-	t_philo_simu	*simu;
+	t_philo_simu	simu;
 
-	simu = NULL;
 	if (( err = init_simu(ac, av, &simu)) != SUCCESS
-	||	( err = start_simulation(simu)) != SUCCESS
-	||	( err = wait_simulation_end(simu)) != SUCCESS )
+	||	( err = start_simulation(&simu)) != SUCCESS
+	||	( err = wait_simulation_end(&simu)) != SUCCESS )
 		return 	printf("Program exit with return code: %d\n", err);
 	printf("Out of program\n");
 	return SUCCESS;
