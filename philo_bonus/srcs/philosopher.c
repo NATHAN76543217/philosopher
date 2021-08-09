@@ -6,6 +6,13 @@
 */
 static void	stop_simulation(t_philo *philo)
 {
+		sem_t *forks = NULL;
+	
+	if ((forks = sem_open("simu_m", 0)) == SEM_FAILED)
+	{
+		printf("Error while opening simu_m\n");
+		return ;
+	}
 	sem_wait(philo->simu->simu_m);
 	philo->simu->running = FALSE;
 	if ( philo->simu->max_eating != -1 && philo->eat_count < philo->simu->max_eating)
@@ -20,6 +27,9 @@ static void	stop_simulation(t_philo *philo)
 	#else
 		printf("End of simulation.\n");
 	#endif
+	//TODO secure close
+	sem_close(forks);
+	printf("simu_m closed\n");
 }
 
 /*
@@ -50,6 +60,7 @@ static void	routine(t_philo *philo)
 		if ( ret_val == END_SIMULATION || philo_sleep(philo) == END_SIMULATION)
 			break ;
 	}
+	//TODO check if
 	if (philo->simu->running)
 		stop_simulation(philo);
 	destroy_philosopher(philo);
