@@ -69,6 +69,7 @@ int			main(int ac, char **av)
 	int				err;
 	t_philo_simu	simu;
 
+	//TODO make a Thread monitor
 	if (( err = init_simu(ac, av, &simu)) != SUCCESS
 	||	( err = start_simulation(&simu)) != SUCCESS
 	||	( err = wait_simulation_end(&simu)) != SUCCESS )

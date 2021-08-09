@@ -23,20 +23,21 @@ static void	start_game_info(t_philo_simu const *simu)
 */
 static int	check_param_validity(t_philo_simu const *simu)
 {
-	if (simu->number_of_philosopher <= 0)
-		return error_msg("You cannot have less than 1 philosopher.\n", ARGUMENT_ERROR);
-	else if (simu->time_to_die <= 0)
-		return error_msg("You cannot have a 'time_to_die' value less or equal than 0.\n", ARGUMENT_ERROR);
-	else if (simu->time_to_eat <= 0)
-		return error_msg("You cannot have a 'time_to_eat' value less or equal than 0.\n", ARGUMENT_ERROR);
-	else if (simu->time_to_sleep <= 0)
-		return error_msg("You cannot have a 'time_to_sleep' value less or equal than 0.\n", ARGUMENT_ERROR);
-	else if (simu->max_eating < -1)
-		return error_msg("You cannot have a 'number_of_times_each_philosopher_must_eat' value less than -1.\n", ARGUMENT_ERROR);
+	if (simu->number_of_philosopher <= 0 || simu->number_of_philosopher > MAX_PHILO)
+		return error_msg("You cannot have less than 1 philosopher or greater than " STRI(MAX_PHILO) ".\n", ARGUMENT_ERROR);
+	else if (simu->time_to_die <= 0 || simu->time_to_die > MAX_TIME)
+		return error_msg("You cannot have a 'time_to_die' value less or equal than 0 or greater than " STRI(MAX_TIME) ".\n", ARGUMENT_ERROR);
+	else if (simu->time_to_eat <= 0 || simu->time_to_eat > MAX_TIME)
+		return error_msg("You cannot have a 'time_to_eat' value less or equal than 0 or greater than " STRI(MAX_TIME) ".\n", ARGUMENT_ERROR);
+	else if (simu->time_to_sleep <= 0 || simu->time_to_sleep > MAX_TIME)
+		return error_msg("You cannot have a 'time_to_sleep' value less or equal than 0 or greater than " STRI(MAX_TIME) ".\n", ARGUMENT_ERROR);
+	else if (simu->max_eating < -1 || simu->max_eating > MAX_EAT)
+		return error_msg("You cannot have a 'number_of_times_each_philosopher_must_eat' value less than -1 or greater than " STRI(MAX_EAT) ".\n", ARGUMENT_ERROR);
 	else if (simu->nb_fork < 2)
 		return error_msg("You cannot have a number of forks less than 2.\nThis behavior is unexpected, please report us the problem.\n", SYS_ERROR);
 	return SUCCESS;
 }
+
 
 /*
 ** Initialise simulation's mutex

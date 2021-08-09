@@ -58,7 +58,6 @@ int			takeFork(t_philo *philo)
 	
 	if ((forks = sem_open("forks", 0)) == SEM_FAILED)
 		return error_msg("Error while opening forks\n", SYS_ERROR);
-	printf("forks opened\n");
 	while (philo->forks_in_hand < 2)
 	{
 		if (sem_wait(philo->simu->forks) == SUCCESS)
@@ -75,12 +74,12 @@ int			takeFork(t_philo *philo)
 		}
 		else
 		{
+			//TODO secu sem_close
+		
 			sem_close(forks);
-			printf("forks closed\n");
 			return EXIT_FAILURE;
 		}
 	}
 	sem_close(forks);
-	printf("forks closed\n");
 	return SUCCESS;
 }

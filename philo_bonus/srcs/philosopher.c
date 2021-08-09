@@ -6,7 +6,7 @@
 */
 static void	stop_simulation(t_philo *philo)
 {
-		sem_t *forks = NULL;
+	sem_t *forks;
 	
 	if ((forks = sem_open("simu_m", 0)) == SEM_FAILED)
 	{

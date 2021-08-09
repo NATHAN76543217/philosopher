@@ -22,9 +22,17 @@
 # define ARGUMENT_ERROR 1
 # define END_SIMULATION 2
 
+# define MAX_EAT 100
+# define MAX_TIME 10000
+# define STRE(x) #x
+# define STRI(x) STRE(x)
+# define MAX_PHILO 100
+
 # define FALSE 0
 # define TRUE 1
-# define DEBUG
+
+
+//# define DEBUG
 
 typedef struct		s_philo_simu
 {
