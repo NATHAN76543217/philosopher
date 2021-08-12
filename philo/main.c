@@ -15,11 +15,14 @@ static int	clear_all(t_philo_simu *simu)
 		free(simu->forks);
 	if (simu->philos)
 		free(simu->philos);
+	if (simu->threads)
+		free(simu->threads);
 	#ifdef DEBUG
 		printf("Simulation cleared.\n");
 	#endif
 	return SUCCESS;
 }
+
 
 /*
 ** Wait for the simulation is ending before cleaning context
@@ -31,15 +34,18 @@ static int	wait_simulation_end(t_philo_simu *simu)
 	t_philo	*philo;
 
 	i = -1;
+	
+	if ((err = pthread_join(simu->monitor, NULL)) != SUCCESS)
+		return (error_msg("Error when joining monitor thread.\n", SYS_ERROR));
+	log_simu("monitor joined", simu);
 	while (++i < simu->number_of_philosopher)
 	{
-		if ((err = pthread_join(simu->philos[i], (void * )&philo)) != SUCCESS)
-			return error_msg("Error when joining two threads.\n", SYS_ERROR);
-		destroy_philosopher(philo);
-		#ifdef DEBUG
-			printf("thread %d joined\n", i);
-		#endif
+		if ((err = pthread_join(simu->threads[i], (void * )&philo)) != SUCCESS)
+			return (error_msg("Error when joining two threads.\n", SYS_ERROR));
+		log_philo("thread joined", philo);
 	}
+	destroy_all_philosophers(simu);
+	log_simu("structure destroyed", simu);
 	return clear_all(simu);
 }
 
@@ -57,19 +63,24 @@ static int	start_simulation(t_philo_simu *simu)
 		if ((err = create_philosopher(simu, i)) != SUCCESS)
 			return err;
 	}
-	printf("Simulation started\n");
+	log_simu("all the philosophers are launched.", simu);
+	create_monitor(simu);
+	log_simu("the monitor is launched.", simu);
 	return SUCCESS;
 }
 
 /*
 ** Program's entrypoint
 */
+//TODO check if structure can be inline initialised with norminette
+//TODO ask for removing should stop message
+//TODO secure every mutex call
+//TODO change makefile with all files explicitly named
 int			main(int ac, char **av)
 {
 	int				err;
 	t_philo_simu	simu;
 
-	//TODO make a Thread monitor
 	if (( err = init_simu(ac, av, &simu)) != SUCCESS
 	||	( err = start_simulation(&simu)) != SUCCESS
 	||	( err = wait_simulation_end(&simu)) != SUCCESS )

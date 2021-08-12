@@ -1,37 +1,13 @@
 #include "philo.h"
 
-/*
-** Return the number of milliseconds elapsed since the start of simulation
-*/
-long		elapsedStart(const t_philo *const philo)
+void		log_philo(char *str, const t_philo *philo)
 {
-	struct timeval tInit;
-
-	gettimeofday(&tInit, NULL);
-	long sec_ini = (long) philo->timestamp->tv_sec; 
-	long milli_ini = (long) philo->timestamp->tv_usec;
-	long sec = (long) tInit.tv_sec; 
-	long milli = (long) tInit.tv_usec;
-	return ((sec - sec_ini) * 1000000 + (milli - milli_ini)) / 1000;
+	printf("%ld %3d  %s\n", elapsedStart(*(philo->timestamp)), philo->id, str);	
 }
 
-/*
-** Return the number of milliseconds elapsed since the last meal
-*/
-long		elapsedLastMeal(const t_philo *const philo)
+void		log_simu(char *str, const t_philo_simu *simu)
 {
-	struct timeval tInit;
-
-	gettimeofday(&tInit, NULL);
-	long sec_ini = (long) philo->last_meal->tv_sec; 
-	long milli_ini = (long) philo->last_meal->tv_usec;
-	long sec = (long) tInit.tv_sec; 
-	long milli = (long) tInit.tv_usec;
-	long micro_s = ((sec - sec_ini) * 1000000 + (milli - milli_ini));
-	#ifdef DEBUG
-		printf("%ld %d since last meal: %ld,%ld.\n", elapsedStart(philo), philo->id, micro_s / 1000, micro_s % 1000);
-	#endif
-	return  micro_s / 1000;
+	printf("%ld simu %s\n", elapsedStart(simu->timestamp), str);	
 }
 
 /*
@@ -78,4 +54,24 @@ int			error_msg(const char *const str, const int ret_value)
 {
 	printf("%s", str);
 	return ret_value;
+}
+
+/*
+** copy memory area values to another area
+*/
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	size_t	i;
+	char	*d;
+	char	*s;
+
+	i = 0;
+	while (i < n)
+	{
+		s = (char *) src + i;
+		d = (char *) dest + i;
+		*d = *s;
+		i++;
+	}
+	return dest;
 }

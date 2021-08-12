@@ -65,15 +65,18 @@ int			init_simu(int ac, char **av, t_philo_simu *const simu)
 	if (ac < 5 || ac > 6 )
         return error_msg("Bad number of arguments\n\n\tUsage:\t./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n\n", ARGUMENT_ERROR);
 	memset(simu, 0, sizeof(t_philo_simu));
-	(*simu).running = TRUE;
+	simu->running = TRUE;
     simu->number_of_philosopher = ft_atoi(av[1]);
     simu->time_to_die = ft_atoi(av[2]);
 	simu->time_to_eat = ft_atoi(av[3]);
 	simu->time_to_sleep = ft_atoi(av[4]);
+	simu->count_philo_eat_enought = 0;
 	simu->nb_fork = (simu->number_of_philosopher == 1) ? 2 : simu->number_of_philosopher;
 	simu->max_eating = ( ac == 6 ) ? ft_atoi(av[5]) : ( simu->max_eating = -1);
-	if (( simu->philos = (pthread_t *) malloc( sizeof(pthread_t) * simu->number_of_philosopher )) == NULL
-	||	( simu->forks = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t) * simu->nb_fork)) == NULL)
+	gettimeofday(&(simu->timestamp), NULL);
+	if (( simu->threads = (pthread_t *) malloc( sizeof(pthread_t) * simu->number_of_philosopher )) == NULL
+	||	( simu->forks = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t) * simu->nb_fork)) == NULL
+	||	( simu->philos = (t_philo **) malloc(sizeof(t_philo *) * simu->number_of_philosopher )) == NULL)
 		return error_msg("A memory error happen when malloc (simu)\n", MEMORY_ERROR);
 	if (( err = check_param_validity(simu) != SUCCESS )
 	||	( err = mutex_initialisation(simu)) != SUCCESS )
