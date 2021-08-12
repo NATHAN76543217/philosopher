@@ -67,31 +67,12 @@ typedef struct		s_philo
 
 
 /*
-** time.c
-*/
-long	elapsedStart(const struct timeval timestamp);
-long	elapsedLastMeal(const t_philo *philo);
-
-/*
-** utils.c
-*/
-int		ft_atoi(const char *str);
-int		error_msg(const char *str, int ret_value);
-void	log_simu(char *str, const t_philo_simu *simu);
-void	log_philo(char *str, const t_philo *philo);
-void	*ft_memcpy(void *dest, const void *src, size_t n);
-
-/*
-** init_simu.c
+** activity.c
 */
 
-int		init_simu(int ac, char **av, t_philo_simu * simu);
-
-/*
-** philosopher.c
-*/
-
-int     create_philosopher(t_philo_simu *simu, int id);
+int		philo_eat(t_philo *philo);
+int		philo_sleep(t_philo *philo);
+int		take_forks(t_philo *philo);
 
 /*
 ** destroy_philospoher.c
@@ -100,17 +81,47 @@ int     create_philosopher(t_philo_simu *simu, int id);
 void	destroy_all_philosophers(t_philo_simu *simu);
 
 /*
-** activity.c
+** init_simu.c
 */
 
-int		take_forks(t_philo *philo);
-int		philo_sleep(t_philo *philo);
-int		philo_eat(t_philo *philo);
-int		shouldStopSimu(const t_philo *philo);
+int		init_simu(int ac, char **av, t_philo_simu * simu);
+
+/*
+** log.c
+*/
+
+void	log_philo(char *str, const t_philo *philo);
+void	log_simu(char *str, const t_philo_simu *simu);
+int		error_msg(const char *str, int ret_value);
 
 /*
 ** monitor.c
 */
 int		create_monitor(t_philo_simu *simu);
+
+/*
+** philosopher.c
+*/
+
+int		shouldStopSimu(const t_philo *philo);
+int     create_philosopher(t_philo_simu *simu, int id);
+
+/*
+** time.c
+*/
+
+long	elapsedStart(const struct timeval timestamp);
+long	elapsedLastMeal(const t_philo *philo);
+
+/*
+** utils.c
+*/
+
+int		ft_atoi(const char *str);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+
+
+
+
 
 #endif		//PHILO_H

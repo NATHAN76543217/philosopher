@@ -1,14 +1,5 @@
 #include "philo.h"
 
-void		log_philo(char *str, const t_philo *philo)
-{
-	printf("%ld %3d  %s\n", elapsedStart(*(philo->timestamp)), philo->id, str);	
-}
-
-void		log_simu(char *str, const t_philo_simu *simu)
-{
-	printf("%ld simu %s\n", elapsedStart(simu->timestamp), str);	
-}
 
 /*
 ** The isdigit() function tests for a decimal digit character.
@@ -47,14 +38,6 @@ int			ft_atoi(const char *str)
 	return (result);
 }
 
-/*
-** The error_msg() function print a given error before returning a given value 
-*/
-int			error_msg(const char *const str, const int ret_value)
-{
-	printf("%s", str);
-	return ret_value;
-}
 
 /*
 ** copy memory area values to another area

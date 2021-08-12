@@ -1,23 +1,16 @@
 #include "philo.h"
 
 /*
-** Check if simulation should be stop
+** Update the last_meal timestamp to now.
 */
-int		shouldStopSimu(const t_philo *philo)
-{
-	if ((!philo->simu->running || !philo->alive))
-		log_philo("should stop", philo);
-	return !philo->simu->running || !philo->alive;
-}
-
-int		updateLastMeal(t_philo *philo)
+static int	updateLastMeal(t_philo *philo)
 {
 	if (pthread_mutex_lock(&(philo->philo_m)) != SUCCESS)
-		return error_msg("mutex locking system error\n", SYS_ERROR);
+		return (error_msg("mutex locking system error\n", SYS_ERROR));
 	gettimeofday(philo->last_meal, NULL);
 	if (pthread_mutex_unlock(&(philo->philo_m)) != SUCCESS)
-		return error_msg("mutex locking system error\n", SYS_ERROR);
-	return SUCCESS;
+		return (error_msg("mutex locking system error\n", SYS_ERROR));
+	return (SUCCESS);
 }
 
 /*
@@ -29,10 +22,10 @@ int			philo_eat(t_philo *philo)
 
 	log_philo("is eating", philo);
 	if ((err = updateLastMeal(philo)) != SUCCESS)
-		return err;
+		return (err);
 	usleep(philo->simu->time_to_eat * 1000);
 	if ((err = updateLastMeal(philo)) != SUCCESS)
-		return err;
+		return (err);
 	philo->eat_count++;
 	if (philo->eat_count == philo->simu->max_eating)
 	{
@@ -43,7 +36,7 @@ int			philo_eat(t_philo *philo)
 	pthread_mutex_unlock( &(philo->simu->forks[philo->left_fork_id]) );
 	pthread_mutex_unlock( &(philo->simu->forks[philo->right_fork_id]) );
 	printf("%ld %3d  has release two forks[%d][%d]\n", elapsedStart(*(philo->timestamp)), philo->id, philo->left_fork_id, philo->right_fork_id);
-	return SUCCESS;
+	return (SUCCESS);
 }
 
 /*
@@ -59,12 +52,12 @@ int			philo_sleep(t_philo *philo)
 /*
 ** Take the fork specified by the id passed in param
 */
-static int 	take_fork(t_philo *philo, int fork_id)
+static int	take_fork(t_philo *philo, int fork_id)
 {
 	if (pthread_mutex_lock(&(philo->simu->forks[fork_id])))
 		return error_msg("mutex locking system error\n", SYS_ERROR);
 	printf("%ld %3d  has taken a fork. [%d]\n", elapsedStart(*(philo->timestamp)), philo->id, fork_id);
-	return SUCCESS;
+	return (SUCCESS);
 }
 
 /*
@@ -74,16 +67,16 @@ int			take_forks(t_philo *philo)
 {
 	log_philo("is thinking.", philo);
 	if (take_fork(philo, philo->right_fork_id))
-		return SYS_ERROR;
+		return (SYS_ERROR);
 	if (shouldStopSimu(philo))
 	{
 		pthread_mutex_unlock(&(philo->simu->forks[philo->right_fork_id]));
-		return EXIT_FAILURE;
+		return (EXIT_FAILURE);
 	}
 	if (take_fork(philo, philo->left_fork_id))
 	{
 		pthread_mutex_unlock(&(philo->simu->forks[philo->right_fork_id]));
-		return SYS_ERROR;
+		return (SYS_ERROR);
 	}
-	return SUCCESS;
+	return (SUCCESS);
 }

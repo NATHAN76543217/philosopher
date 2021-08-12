@@ -1,6 +1,16 @@
 #include "philo.h"
 
 /*
+** Check if simulation should be stop
+*/
+int			shouldStopSimu(const t_philo *philo)
+{
+	if ((!philo->simu->running || !philo->alive))
+		log_philo("should stop", philo);
+	return (!philo->simu->running || !philo->alive);
+}
+
+/*
 ** Warn other philosophers to stop the simulation
 */
 static void	stop_simulation(const t_philo *philo)
@@ -43,7 +53,7 @@ static void	*routine(void* philosopher)
 	}
 	if (philo->simu->running)
 		stop_simulation(philo);
-	return philo;
+	return (philo);
 }
 
 /*
@@ -55,10 +65,10 @@ static int	init_timestamps(t_philo *philo, struct timeval start_timestamp)
 
 	if (( timestamp[0] = (struct timeval*) malloc( sizeof( struct timeval ))) == NULL
 	||	( timestamp[1] = (struct timeval*) malloc( sizeof( struct timeval ))) == NULL )
-			return error_msg("A memory error happen when malloc (philo)\n", MEMORY_ERROR);
+			return (error_msg("A memory error happen when malloc (philo)\n", MEMORY_ERROR));
 	philo->timestamp = ft_memcpy((void *) timestamp[0], (void *) &start_timestamp, sizeof(struct timeval));
 	philo->last_meal = ft_memcpy((void *) timestamp[1], (void *) &start_timestamp, sizeof(struct timeval));
-	return SUCCESS;
+	return (SUCCESS);
 }
 
 
@@ -82,7 +92,7 @@ int     	create_philosopher(t_philo_simu *simu, int id)
 	t_philo*		philo;
 
 	if ((philo = (t_philo *) malloc(sizeof(t_philo))) == NULL)
-		return error_msg("A memory error happen when malloc\n", MEMORY_ERROR);
+		return (error_msg("A memory error happen when malloc\n", MEMORY_ERROR));
 	philo->id = id + 1;
 	philo->simu = simu;
 	philo->eat_count = 0;
@@ -93,11 +103,11 @@ int     	create_philosopher(t_philo_simu *simu, int id)
 	if ( simu->number_of_philosopher == 1 )
 		philo->left_fork_id = 1;
 	if ((err = init_timestamps(philo, simu->timestamp)) != SUCCESS)
-		return err;
+		return (err);
 	if (pthread_mutex_init(&(philo->philo_m), NULL) != SUCCESS)
-		return error_msg("mutex initialisation for philosopher failed\n", SYS_ERROR);
+		return (error_msg("mutex initialisation for philosopher failed\n", SYS_ERROR));
 	simu->philos[id] = philo;
 	if ((err = pthread_create(&(simu->threads[id]), NULL, &routine, (void *)philo)) != 0)
 		   printf("\ncan't create thread :[%d]", err);
-	return SUCCESS;
+	return (SUCCESS);
 }

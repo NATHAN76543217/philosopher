@@ -46,7 +46,7 @@ static int	wait_simulation_end(t_philo_simu *simu)
 	}
 	destroy_all_philosophers(simu);
 	log_simu("structure destroyed", simu);
-	return clear_all(simu);
+	return (clear_all(simu));
 }
 
 /*
@@ -66,7 +66,7 @@ static int	start_simulation(t_philo_simu *simu)
 	log_simu("all the philosophers are launched.", simu);
 	create_monitor(simu);
 	log_simu("the monitor is launched.", simu);
-	return SUCCESS;
+	return (SUCCESS);
 }
 
 /*
@@ -84,7 +84,7 @@ int			main(int ac, char **av)
 	if (( err = init_simu(ac, av, &simu)) != SUCCESS
 	||	( err = start_simulation(&simu)) != SUCCESS
 	||	( err = wait_simulation_end(&simu)) != SUCCESS )
-		return 	printf("Program exit with return code: %d\n", err);
+		return (printf("Program exit with return code: %d\n", err));
 	printf("Out of program\n");
-	return SUCCESS;
+	return (SUCCESS);
 }
