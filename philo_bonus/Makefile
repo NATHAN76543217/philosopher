@@ -9,13 +9,12 @@ PATH_SRC	=	srcs
 PATH_OBJ	=	objs
 
 # List of sources
-SRCS_FILES		= 	$(shell find $(PATH_SRC) -type f | cut -d/ -f2- )
-SRCS_FILES		+= main.c
-INC_FILES		=	$(shell find $(PATH_INC) -type f | cut -d/ -f2- )
+SRCS_FILES	=	activity.c init_simulation.c listener.c log.c monitor.c philosopher.c time.c utils.c
+SRCS		=	$(addprefix $(PATH_SRC)/, $(SRCS_FILES)) main.c
+INC_FILES	=	$(shell find $(PATH_INC) -type f | cut -d/ -f2- )
 
-OBJS		=	$(addprefix $(PATH_OBJ)/, $(SRCS_FILES:.c=.o))
+OBJS		=	$(addprefix $(PATH_OBJ)/, $(SRCS:.c=.o))
 INCS		=	$(addprefix $(PATH_INC)/, $(INC_FILES))
-DIRS_LIST	=	$(shell ls -R $(PATH_SRC) 2> /dev/null | grep / | cut -d / -f2-3 | cut -d : -f 1)
 
 # Commands of compilation
 COMP		=	clang
@@ -37,7 +36,7 @@ all:	init $(NAME)
 	@ echo "$(_SUCCESS) Compilation done"
 
 init:
-	@ mkdir -p $(PATH_OBJ)/$(DIRS_LIST)
+	@ mkdir -p $(PATH_OBJ)/$(PATH_SRC)
 
 $(NAME): $(OBJS) $(INCS)
 	@ $(COMP) $(COMP_FLAG) $(COMP_ADD) -o $(NAME) $(OBJS)
@@ -46,7 +45,7 @@ $(PATH_OBJ)/%.o : %.c  $(INCS)
 	@ ($(COMP) $(COMP_FLAG) $(COMP_ADD) -c $< -o $@ )
 	@ echo "$(_INFO) Compilation of $*"
 
-$(PATH_OBJ)/%.o : $(PATH_SRC)/%.c  $(INCS) 
+$(PATH_OBJ)/%.o : $(PATH_SRC)/%.c  $(INCS)
 	@ ($(COMP) $(COMP_FLAG) $(COMP_ADD) -c $< -o $@ )
 	@ echo "$(_INFO) Compilation of $*"
 

@@ -1,7 +1,7 @@
 #include "philo_bonus.h"
 
 /*
-**
+** free and destroy every semaphores
 */
 static int	destroy_semaphores(t_philo_simu *simu)
 {
@@ -44,7 +44,6 @@ static int	wait_simulation_end(t_philo_simu *simu)
 	i = -1;
 	while (++i < simu->number_of_philosopher)
 	{
-		//TODO check return value
 		if (waitpid(simu->philos_id[i], NULL, 0) != simu->philos_id[i])
 			return error_msg("Error when joining two process.\n", SYS_ERROR);
 		printf("%ld %3d  process joined\n", elapsedStart(simu->timestamp), i + 1 );
@@ -75,15 +74,13 @@ static int	start_simulation(t_philo_simu *simu)
 ** Program's entrypoint
 */
 //TODO check if structure can be inline initialised with norminette
-//TODO ask for removing should stop message
-//TODO secure every semaphore call
-//TODO change makefile with all files explicitly named
+//TODO norme project
 int			main(int ac, char **av)
 {
 	int				err;
 	t_philo_simu	simu;
 
-	if (( err = init_simu(ac, av, &simu)) != SUCCESS
+	if (( err = init_simulation(ac, av, &simu)) != SUCCESS
 	||	( err = start_simulation(&simu)) != SUCCESS
 	||	( err = wait_simulation_end(&simu)) != SUCCESS )
 		return 	printf("Program exit with return code: %d\n", err);

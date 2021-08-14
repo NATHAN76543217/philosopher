@@ -10,9 +10,6 @@
 #include <sys/time.h>
 #include <semaphore.h>
 
-//TODO remove
-#include <errno.h>
-
 # define SYS_ERROR -2
 # define MEMORY_ERROR -1
 # define SUCCESS 0
@@ -77,7 +74,7 @@ int		take_forks(t_philo *philo);
 ** init_simu.c
 */
 
-int		init_simu(int ac, char **av, t_philo_simu * simu);
+int		init_simulation(int ac, char **av, t_philo_simu * simu);
 
 /*
 ** listener.c
@@ -92,6 +89,7 @@ int	start_eat_enough_listener(t_philo_simu *simu);
 
 void	log_philo(char *str, const t_philo *philo);
 void	log_simu(char *str, const t_philo_simu *simu);
+int		log_syserror(char *str, const t_philo *philo);
 int		error_msg(const char *str, int ret_value);
 
 /*

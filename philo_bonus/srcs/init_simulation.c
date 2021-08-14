@@ -44,7 +44,6 @@ static int	check_param_validity(t_philo_simu const *simu)
 */
 static int	semaphores_initialisation(t_philo_simu *simu)
 {
-	// TODO only for a time?
 	sem_unlink("forks");
 	sem_unlink("eat_enough");
 	sem_unlink("stop_simu");
@@ -54,8 +53,6 @@ static int	semaphores_initialisation(t_philo_simu *simu)
 	if (( simu->eat_enough = sem_open("eat_enough", O_CREAT | O_EXCL, S_IRWXU, 0)) == SEM_FAILED )
 	{
 		sem_close(simu->forks);
-		printf("errno = %d\n", errno);
-		printf("msg: %s\n", strerror(errno));
 		return error_msg("semaphore (eat_enough) initialisation failed\n", SYS_ERROR);
 	}
 	if (( simu->stop_simu = sem_open("stop_simu", O_CREAT | O_EXCL, S_IRWXU, 0)) == SEM_FAILED )
@@ -78,7 +75,7 @@ static int	semaphores_initialisation(t_philo_simu *simu)
 /*
 ** Init simulation with program params
 */
-int			init_simu(int ac, char **av, t_philo_simu *const simu)
+int			init_simulation(int ac, char **av, t_philo_simu *const simu)
 {
 	int				err;
 
