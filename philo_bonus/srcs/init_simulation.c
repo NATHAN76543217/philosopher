@@ -1,11 +1,11 @@
-#include "philo_bon.h"
+#include "philo_bonus.h"
 
 /*
 ** Dump simulation config
 */
 static void	game_info(t_philo_simu const *simu)
 {
-	printf("\n---- philo_bon simulation ----\n\n");
+	printf("\n---- philo_bonus simulation ----\n\n");
 	printf("number_of_philosophers = %d\n", simu->number_of_philosopher);
 	printf("time_to_die  = %d\n", simu->time_to_die);
 	printf("time_to_eat = %d\n", simu->time_to_eat);

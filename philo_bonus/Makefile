@@ -1,7 +1,7 @@
 .PHONY: all clean fclean re
 
 # Name of file
-NAME		=	philo_bon
+NAME		=	philo_bonus
 
 # Name directory
 PATH_INC	=	includes

@@ -1,4 +1,4 @@
-#include "philo_bon.h"
+#include "philo_bonus.h"
 
 /*
 ** Return the number of milliseconds elapsed since the timestamp passed in param

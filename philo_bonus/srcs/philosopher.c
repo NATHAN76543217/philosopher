@@ -1,4 +1,4 @@
-#include "philo_bon.h"
+#include "philo_bonus.h"
 
 /*
 ** Philosopher lifecycle
