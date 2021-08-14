@@ -3,7 +3,7 @@
 /*
 ** Philosopher lifecycle
 */
-static void	*routine(t_philo* philo)
+static int	routine(t_philo* philo)
 {
 	int			i;
 	int			ret;
@@ -21,10 +21,19 @@ static void	*routine(t_philo* philo)
 	}
 	if (i == EATING)
 	{
-		sem_post(philo->simu->forks);
-		sem_post(philo->simu->forks);
+		if (sem_post(philo->simu->forks) != SUCCESS)
+		{
+			printf("%ld %3d   critical system error in semaphore (forks)\n", elapsedStart(philo->timestamp), philo->id);	
+			return (SYS_ERROR);
+		}
+		if (sem_post(philo->simu->forks) != SUCCESS)
+		{
+			printf("%ld %3d   critical system error in semaphore (forks)\n", elapsedStart(philo->timestamp), philo->id);	
+			return (SYS_ERROR);
+		}
+		log_philo("has release two forks.", philo);
 	}
-	return (philo);
+	return (SUCCESS);
 }
 
 /*
@@ -37,7 +46,7 @@ static void *philosopher(void *philosopher)
 	philo = (t_philo *) philosopher;
 	log_philo("is starting", philo);
 	start_monitoring(philo);
-	routine(philo);
+	exit(routine(philo));
 	return (NULL);
 }
 
@@ -75,6 +84,7 @@ int     	create_philosopher(t_philo_simu *simu, int id)
 	philo.id = id + 1;
 	philo.simu = simu;
 	philo.eat_count = 0;
+	philo.alive = TRUE;
 	// philo.forks_in_hand = 0;
 	init_timestamps(&philo, simu->timestamp);
 	init_activities(&philo);	
@@ -84,32 +94,3 @@ int     	create_philosopher(t_philo_simu *simu, int id)
 		return error_msg("Error while forking processes.", SYS_ERROR);
 	return SUCCESS;
 }
-
-/*
-** init and launch a philosopher thread
-*/
-// int     	create_philosopher(t_philo_simu *simu, int id)
-// {
-	// int				err;
-	// t_philo*		philo;
-// 
-	// if ((philo = (t_philo *) malloc(sizeof(t_philo))) == NULL)
-		// return error_msg("A memory error happen when malloc\n", MEMORY_ERROR);
-	// philo->id = id + 1;
-	// philo->simu = simu;
-	// philo->eat_count = 0;
-	// philo->alive = TRUE;
-	// philo->left_fork_id = ( id % 2) ? id : (id + 1) % simu->number_of_philosopher;
-	// philo->right_fork_id = ( id % 2) ? (id + 1) % simu->number_of_philosopher : id;
-	// init_activities(philo);
-	// if ( simu->number_of_philosopher == 1 )
-		// philo->left_fork_id = 1;
-	// if ((err = init_timestamps(philo, simu->timestamp)) != SUCCESS)
-		// return err;
-	// if (pthread_mutex_init(&(philo->philo_m), NULL) != SUCCESS)
-		// return error_msg("mutex initialisation for philosopher failed\n", SYS_ERROR);
-	// simu->philos[id] = philo;
-	// if ((err = pthread_create(&(simu->threads[id]), NULL, &routine, (void *)philo)) != 0)
-		//    printf("\ncan't create thread :[%d]", err);
-	// return SUCCESS;
-// }

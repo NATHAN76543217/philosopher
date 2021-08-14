@@ -5,7 +5,17 @@
 */
 void		log_philo(char *str, const t_philo *philo)
 {
-	printf("%ld %3d  %s\n", elapsedStart(philo->timestamp), philo->id, str);	
+	if ( sem_wait(philo->simu->writing) != SUCCESS)
+	{	
+		printf("%ld %3d   critical system error in semaphore (writing)\n", elapsedStart(philo->timestamp), philo->id);	
+		return ;
+	}
+	printf("%ld %3d   %s\n", elapsedStart(philo->timestamp), philo->id, str);	
+	if (sem_post(philo->simu->writing) != SUCCESS)
+	{
+		printf("%ld %3d   critical system error in semaphore (writing)\n", elapsedStart(philo->timestamp), philo->id);	
+		return ;
+	}
 }
 
 /*
@@ -13,7 +23,17 @@ void		log_philo(char *str, const t_philo *philo)
 */
 void		log_simu(char *str, const t_philo_simu *simu)
 {
-	printf("%ld simu %s\n", elapsedStart(simu->timestamp), str);	
+	if ( sem_wait(simu->writing) != SUCCESS)
+	{
+		printf("%ld   -   critical system error in semaphore (writing)\n", elapsedStart(simu->timestamp));	
+		return ;
+	}
+	printf("%ld   -   %s\n", elapsedStart(simu->timestamp), str);	
+	if (sem_post(simu->writing) != SUCCESS)
+	{
+		printf("%ld   -   critical system error in semaphore (writing)\n", elapsedStart(simu->timestamp));	
+		return ;
+	}
 }
 
 /*

@@ -5,7 +5,7 @@
 */
 static void	game_info(t_philo_simu const *simu)
 {
-	printf("\n---- philo simulation ----\n\n");
+	printf("\n---- philo_bon simulation ----\n\n");
 	printf("number_of_philosophers = %d\n", simu->number_of_philosopher);
 	printf("time_to_die  = %d\n", simu->time_to_die);
 	printf("time_to_eat = %d\n", simu->time_to_eat);
@@ -48,6 +48,7 @@ static int	semaphores_initialisation(t_philo_simu *simu)
 	sem_unlink("forks");
 	sem_unlink("eat_enough");
 	sem_unlink("stop_simu");
+	sem_unlink("writing");
 	if (( simu->forks = sem_open("forks", O_CREAT | O_EXCL, S_IRWXU, simu->nb_fork_init)) == SEM_FAILED )
 		return error_msg("semaphore (forks) initialisation failed\n", SYS_ERROR);
 	if (( simu->eat_enough = sem_open("eat_enough", O_CREAT | O_EXCL, S_IRWXU, 0)) == SEM_FAILED )
@@ -63,6 +64,14 @@ static int	semaphores_initialisation(t_philo_simu *simu)
 		sem_close(simu->eat_enough);
 		return error_msg("semaphore (stop_simu) initialisation failed\n", SYS_ERROR);
 	}
+	if (( simu->writing = sem_open("writing", O_CREAT | O_EXCL, S_IWUSR | S_IRUSR, 1)) == SEM_FAILED )
+	{
+		sem_close(simu->forks);
+		sem_close(simu->eat_enough);
+		sem_close(simu->stop_simu);
+		return error_msg("semaphore (writing) initialisation failed\n", SYS_ERROR);
+	}
+	log_simu("semaphores initialised", simu);
 	return SUCCESS;
 }
 

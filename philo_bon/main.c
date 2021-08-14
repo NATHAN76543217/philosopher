@@ -1,21 +1,36 @@
 #include "philo_bon.h"
 
 /*
+**
+*/
+static int	destroy_semaphores(t_philo_simu *simu)
+{
+	if (sem_close(simu->forks) != SUCCESS
+	||	sem_close(simu->eat_enough) != SUCCESS
+	||	sem_close(simu->stop_simu) != SUCCESS
+	||	sem_close(simu->writing) != SUCCESS
+	||	sem_unlink("forks") != SUCCESS
+	||	sem_unlink("eat_enough") != SUCCESS 
+	||	sem_unlink("stop_simu") != SUCCESS 
+	||	sem_unlink("writing") != SUCCESS)
+		return SYS_ERROR;
+	return (SUCCESS);
+}
+
+/*
 ** Free simulation structure
 */
-static int	clear_all(t_philo_simu *simu)
+static int	clear_simulation(t_philo_simu *simu)
 {
 	int i;
 
 	i = -1;
 	if (simu->philos_id)
 		free(simu->philos_id);
-	if (sem_unlink("forks") != SUCCESS
-	||	sem_unlink("eat_enough") != SUCCESS 
-	|| sem_unlink("stop_simu") != SUCCESS)
+	if (destroy_semaphores(simu) != SUCCESS)
 		return error_msg("semaphore destruction failed\n", SYS_ERROR);
-	log_simu("Simulation cleared.", simu);
-	return SUCCESS;
+	printf("%ld   -   %s\n", elapsedStart(simu->timestamp), "Simulation cleared.");	
+	return (SUCCESS);
 }
 
 
@@ -32,35 +47,10 @@ static int	wait_simulation_end(t_philo_simu *simu)
 		//TODO check return value
 		if (waitpid(simu->philos_id[i], NULL, 0) != simu->philos_id[i])
 			return error_msg("Error when joining two process.\n", SYS_ERROR);
-		printf("%ld %3d  process joined\n", elapsedStart(simu->timestamp), i );
+		printf("%ld %3d  process joined\n", elapsedStart(simu->timestamp), i + 1 );
 	}
-	return clear_all(simu);
+	return clear_simulation(simu);
 }
-
-// /*
-// ** Wait for the simulation is ending before cleaning context
-// */
-// static int	wait_simulation_end(t_philo_simu *simu)
-// {
-// 	int		i;
-// 	int		err;
-// 	t_philo	*philo;
-
-// 	i = -1;
-	
-// 	if ((err = pthread_join(simu->monitor, NULL)) != SUCCESS)
-// 		return (error_msg("Error when joining monitor thread.\n", SYS_ERROR));
-// 	log_simu("monitor joined", simu);
-// 	while (++i < simu->number_of_philosopher)
-// 	{
-// 		if ((err = pthread_join(simu->threads[i], (void * )&philo)) != SUCCESS)
-// 			return (error_msg("Error when joining two threads.\n", SYS_ERROR));
-// 		log_philo("thread joined", philo);
-// 	}
-// 	destroy_all_philosophers(simu);
-// 	log_simu("structure destroyed", simu);
-// 	return clear_all(simu);
-// }
 
 /*
 ** Start simulation with the right number of philosophers
@@ -71,6 +61,7 @@ static int	start_simulation(t_philo_simu *simu)
 	int	err;
 
 	i = -1;
+	start_eat_enough_listener(simu);
 	while(++i < simu->number_of_philosopher)
 	{
 		if ((err = create_philosopher(simu, i)) != SUCCESS)

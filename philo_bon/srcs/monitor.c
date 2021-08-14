@@ -1,16 +1,20 @@
 #include "philo_bon.h"
 
 
+/*
+** Check every CHECK_DELAY milliseconds if the philosopher is starving
+*/
 static void	*monitor(void *philosopher)
 {
 	int i;
 	t_philo *philo;
 	
 	i = 0;
-	philo = (t_philo *) philosopher; 
+	philo = (t_philo *) philosopher;
+	log_philo("monitor started", philo);
 	while (philo->alive)
 	{
-		usleep(1000);
+		usleep(CHECK_DELAY * 1000);
 		if (elapsedLastMeal(philo) > philo->simu->time_to_die)
 		{
 			philo->alive = FALSE;
@@ -19,16 +23,16 @@ static void	*monitor(void *philosopher)
 		}
 		i = (i + 1) % philo->simu->number_of_philosopher;
 	}
-
+	log_philo("monitor stopped", philo);
 	return (NULL);
 }
 
-static int	create_monitor(t_philo_simu *simu)
+static int	start_monitor(t_philo *philo)
 {
 	int			err;
 	pthread_t	monitor_id;
 
-	if ((err = pthread_create(&monitor_id, NULL, &monitor, (void *)simu)) != 0)
+	if ((err = pthread_create(&monitor_id, NULL, &monitor, (void *)philo)) != 0)
 	{
 	   printf("\ncan't create monitor thread :[%d]", err);
 		return (SYS_ERROR);
@@ -40,7 +44,7 @@ static int	create_monitor(t_philo_simu *simu)
 
 int			start_monitoring(t_philo *philo)
 {
-	create_monitor(philo->simu);
+	start_monitor(philo);
 	start_end_simu_listener(philo);
 	return SUCCESS;
 }

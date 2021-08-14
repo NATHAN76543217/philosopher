@@ -25,6 +25,7 @@
 # define STRE(x) #x
 # define STRI(x) STRE(x)
 # define MAX_PHILO 100
+# define CHECK_DELAY 4
 
 # define FALSE 0
 # define TRUE 1
@@ -47,6 +48,7 @@ typedef struct		s_philo_simu
 	struct timeval	timestamp;
 	pid_t			*philos_id;
 	sem_t			*forks;
+	sem_t			*writing;
 	sem_t			*eat_enough;
 	sem_t			*stop_simu;
 }					t_philo_simu;

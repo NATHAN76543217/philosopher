@@ -1,18 +1,29 @@
 #include "philo_bon.h"
 
 /*
-** wait for the signal of the end of simulation
+** wait for the end of simulation's signal 
+** then kill the philosopher and propagates signal
+** to others philos
 */
 static void *end_simu_listener(void *philosopher)
 {
 	t_philo *philo;
 
 	philo = (t_philo *)philosopher;
-	sem_wait(philo->simu->stop_simu);
+	log_philo("listener started", philo);
+	if ( sem_wait(philo->simu->stop_simu) != SUCCESS)
+	{
+		printf("%ld %3d   critical system error in semaphore (stop_simu)\n", elapsedStart(philo->timestamp), philo->id);	
+		return (NULL);
+	}
 	log_philo("signal 'end of simulation' received", philo);
 	philo->alive = FALSE;
-	sem_post(philo->simu->stop_simu);
-	return NULL;
+	if (sem_post(philo->simu->stop_simu) != SUCCESS)
+	{
+		printf("%ld %3d   critical system error in semaphore (stop_simu)\n", elapsedStart(philo->timestamp), philo->id);	
+		return (NULL);
+	}
+	return (NULL);
 }
 
 /*
@@ -41,14 +52,23 @@ static void *eat_enough_listener(void *simulation)
 	t_philo_simu *simu;
 
 	simu = (void *)simulation;
+	log_simu("eat enough listener started.", simu);
 	while (simu->count_philo_eat_enough < simu->number_of_philosopher)
 	{
-		sem_wait(simu->eat_enough);
+		if (sem_wait(simu->eat_enough) != SUCCESS)
+		{
+			printf("%ld   -   critical system error in semaphore (eat_enough)\n", elapsedStart(simu->timestamp));	
+			return (NULL);
+		}
 		simu->count_philo_eat_enough ++;
 	}
 	log_simu("all the philosophers have eaten enough.", simu);
-	sem_post(simu->stop_simu);
-	return NULL;
+	if (sem_post(simu->stop_simu) != SUCCESS)
+	{
+		printf("%ld   -   critical system error in semaphore (stop_simu)\n", elapsedStart(simu->timestamp));	
+		return (NULL);
+	}
+	return (NULL);
 }
 
 

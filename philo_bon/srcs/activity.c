@@ -25,11 +25,23 @@ int			philo_eat(t_philo *philo)
 	philo->eat_count++;
 	if (philo->eat_count == philo->simu->max_eating)
 	{
-		sem_post(philo->simu->eat_enough);
+		if (sem_post(philo->simu->eat_enough) != SUCCESS)
+		{
+			printf("%ld %3d   critical system error in semaphore (eat_enough)\n", elapsedStart(philo->timestamp), philo->id);	
+			return (SYS_ERROR);
+		}
 	}	
-	sem_post(philo->simu->forks);
-	sem_post(philo->simu->forks);
-	printf("%ld %3d  has release two forks.\n", elapsedStart(philo->timestamp), philo->id);
+	if (sem_post(philo->simu->forks) != SUCCESS)
+	{
+		printf("%ld %3d   critical system error in semaphore (forks)\n", elapsedStart(philo->timestamp), philo->id);	
+		return (SYS_ERROR);
+	}
+	if (sem_post(philo->simu->forks) != SUCCESS)
+	{
+		printf("%ld %3d   critical system error in semaphore (forks)\n", elapsedStart(philo->timestamp), philo->id);	
+		return (SYS_ERROR);
+	}
+	log_philo("has release two forks.", philo);
 	return (SUCCESS);
 }
 
@@ -44,17 +56,21 @@ int			philo_sleep(t_philo *philo)
 }
 
 /*
-** Take the fork specified by the id passed in param
+** Take a fork in the middle of the table
 */
 static int	take_fork(t_philo *philo)
 {
-	sem_wait(philo->simu->forks);
-	printf("%ld %3d  has taken a fork.\n", elapsedStart(philo->timestamp), philo->id);
+	if (sem_wait(philo->simu->forks) != SUCCESS)
+	{
+		log_philo("critical system error in semaphore (forks)", philo);
+		return SYS_ERROR;
+	}
+	log_philo("has taken a fork.", philo);
 	return (SUCCESS);
 }
 
 /*
-** Getting forks philosopher's phase
+** picking forks philosopher's phase
 */
 int			take_forks(t_philo *philo)
 {
@@ -63,12 +79,22 @@ int			take_forks(t_philo *philo)
 		return (SYS_ERROR);
 	if (!philo->alive)
 	{
-		sem_post(philo->simu->forks);
+		if (sem_post(philo->simu->forks) != SUCCESS)
+		{
+			printf("%ld %3d   critical system error in semaphore (forks)\n", elapsedStart(philo->timestamp), philo->id);	
+			return (SYS_ERROR);
+		}	
+		log_philo("has release a fork.", philo);
 		return (EXIT_FAILURE);
 	}
 	if (take_fork(philo))
 	{
-		sem_post(philo->simu->forks);
+		if (sem_post(philo->simu->forks) != SUCCESS)
+		{
+			printf("%ld %3d   critical system error in semaphore (forks)\n", elapsedStart(philo->timestamp), philo->id);	
+			return (SYS_ERROR);
+		}
+		log_philo("has release a fork.", philo);
 		return (SYS_ERROR);
 	}
 	return (SUCCESS);
