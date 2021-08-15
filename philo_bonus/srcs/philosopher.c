@@ -44,7 +44,7 @@ static void	*kill_philo(t_philo *philo, int ret)
 {
 	if (pthread_join(philo->monitor_id, NULL) != SUCCESS)
 		log_philo("failed to join the thread monitor", philo);
-	log_philo("die.", philo);
+	log_philo("died.", philo);
 	exit(ret);
 }
 
