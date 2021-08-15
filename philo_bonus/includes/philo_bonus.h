@@ -41,6 +41,8 @@ typedef struct		s_philo_simu
 	int				time_to_sleep;
 	int				max_eating;
 	int				nb_fork_init;
+	int				running;
+	pthread_t		listener_id;
 	int				count_philo_eat_enough;
 	struct timeval	timestamp;
 	pid_t			*philos_id;
@@ -55,6 +57,7 @@ typedef struct		s_philo
 	int				id;
 	int				alive;
 	int				eat_count;
+	pthread_t		monitor_id;
 	struct timeval	timestamp;
 	struct timeval	last_meal;
 	t_philo_simu	*simu;
@@ -80,8 +83,9 @@ int		init_simulation(int ac, char **av, t_philo_simu * simu);
 ** listener.c
 */
 
-int	start_end_simu_listener(t_philo *philo);
-int	start_eat_enough_listener(t_philo_simu *simu);
+int		start_end_simu_listener(t_philo *philo);
+int		start_eat_enough_listener(t_philo_simu *simu);
+int		stop_eat_enough_listener(t_philo_simu *simu);
 
 /*
 ** log.c

@@ -33,6 +33,8 @@ static int	check_param_validity(t_philo_simu const *simu)
 		return error_msg("You cannot have a 'time_to_sleep' value less or equal than 0 or greater than " STRI(MAX_TIME) ".\n", ARGUMENT_ERROR);
 	else if (simu->max_eating < -1 || simu->max_eating > MAX_EAT)
 		return error_msg("You cannot have a 'number_of_times_each_philosopher_must_eat' value less than -1 or greater than " STRI(MAX_EAT) ".\n", ARGUMENT_ERROR);
+	else if (simu->max_eating == 0)
+		return error_msg("You cannot have a 'number_of_times_each_philosopher_must_eat' value equal to 0. Disable this option with value -1." STRI(MAX_EAT) ".\n", ARGUMENT_ERROR);
 	else if (simu->nb_fork_init < 2)
 		return error_msg("You cannot have a number of forks less than 2.\nThis behavior is unexpected, please report us the problem.\n", SYS_ERROR);
 	return SUCCESS;
@@ -87,6 +89,7 @@ int			init_simulation(int ac, char **av, t_philo_simu *const simu)
 	simu->time_to_eat = ft_atoi(av[3]);
 	simu->time_to_sleep = ft_atoi(av[4]);
 	simu->count_philo_eat_enough = 0;
+	simu->running = TRUE;
 	simu->nb_fork_init = (simu->number_of_philosopher == 1) ? 2 : simu->number_of_philosopher;
 	simu->max_eating = ( ac == 6 ) ? ft_atoi(av[5]) : ( simu->max_eating = -1);
 	gettimeofday(&(simu->timestamp), NULL);

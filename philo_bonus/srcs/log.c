@@ -1,6 +1,15 @@
 #include "philo_bonus.h"
 
 /*
+** The log_syserror() function print a philosopher status well formated 
+*/
+int		log_syserror(char *str, const t_philo *philo)
+{
+	printf("%ld %3d   %s\n", elapsedStart(philo->timestamp), philo->id, str);	
+	return (SYS_ERROR);
+}
+
+/*
 ** The log_philo() function print a philosopher status well formated 
 */
 void		log_philo(char *str, const t_philo *philo)
@@ -25,13 +34,13 @@ void		log_simu(char *str, const t_philo_simu *simu)
 {
 	if ( sem_wait(simu->writing) != SUCCESS)
 	{
-		printf("%ld   -   critical system error in semaphore (writing)\n", elapsedStart(simu->timestamp));	
+		printf("%ld   -   critical system error in semaphore (writing) %s\n", elapsedStart(simu->timestamp), str);	
 		return ;
 	}
 	printf("%ld   -   %s\n", elapsedStart(simu->timestamp), str);	
 	if (sem_post(simu->writing) != SUCCESS)
 	{
-		printf("%ld   -   critical system error in semaphore (writing)\n", elapsedStart(simu->timestamp));	
+		printf("%ld   -   critical system error in semaphore (writing2)%s\n", elapsedStart(simu->timestamp), str);	
 		return ;
 	}
 }

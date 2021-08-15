@@ -32,22 +32,36 @@ static int	routine(t_philo* philo)
 			return (SYS_ERROR);
 		}
 		log_philo("has release two forks.", philo);
+		sem_post(philo->simu->stop_simu);
 	}
 	return (SUCCESS);
 }
 
 /*
+** Kill the given philosopher and terminate is process
+*/
+static void	*kill_philo(t_philo *philo, int ret)
+{
+	if (pthread_join(philo->monitor_id, NULL) != SUCCESS)
+		log_philo("failed to join the thread monitor", philo);
+	log_philo("die.", philo);
+	exit(ret);
+}
+
+/*
 ** philosophers process entrypoint
 */
-static void *philosopher(void *philosopher)
+static void	philosopher(t_philo *philo)
 {
-	t_philo*	philo;
+	int			ret;
 
-	philo = (t_philo *) philosopher;
 	log_philo("is starting", philo);
-	start_monitoring(philo);
-	exit(routine(philo));
-	return (NULL);
+	if ((ret = start_monitoring(philo)) != SUCCESS)
+		kill_philo(philo, ret);
+	if ((ret = routine(philo)) != SUCCESS)
+		kill_philo(philo, ret);
+	kill_philo(philo, EXIT_SUCCESS);
+	return ;
 }
 
 
