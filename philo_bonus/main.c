@@ -83,6 +83,7 @@ static int	start_simulation(t_philo_simu *simu)
 */
 //TODO check if structure can be inline initialised with norminette
 //TODO norme project
+//TODO Check for leaks
 int			main(int ac, char **av)
 {
 	int				err;

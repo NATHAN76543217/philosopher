@@ -20,6 +20,11 @@ static void	*monitor(void *philosopher)
 			printf("%ld %3d   must die cause doesn't have eat since %ld ms\n", elapsedStart(philo->timestamp),  philo->id, elapsedLastMeal(philo));
 			philo->alive = FALSE;
 			sem_post(philo->simu->stop_simu);
+			if (philo->current == SLEEPING)
+			{
+				log_philo("died.", philo);
+				exit(EXIT_SUCCESS);
+			}
 			break ;
 		}
 		i = (i + 1) % philo->simu->number_of_philosopher;

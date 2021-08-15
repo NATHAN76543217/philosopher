@@ -57,6 +57,7 @@ typedef struct		s_philo
 	int				id;
 	int				alive;
 	int				eat_count;
+	int				current;
 	pthread_t		monitor_id;
 	struct timeval	timestamp;
 	struct timeval	last_meal;

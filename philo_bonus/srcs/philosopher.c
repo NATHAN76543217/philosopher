@@ -11,6 +11,7 @@ static int	routine(t_philo* philo)
 	i = 0;
 	while(philo->alive)
 	{
+		philo->current = i;
 		if ((ret = philo->activity[i](philo)) != SUCCESS)
 		{
 			if (i == THINKING && ret == EXIT_FAILURE)
@@ -99,7 +100,7 @@ int     	create_philosopher(t_philo_simu *simu, int id)
 	philo.simu = simu;
 	philo.eat_count = 0;
 	philo.alive = TRUE;
-	// philo.forks_in_hand = 0;
+	philo.current = 0;
 	init_timestamps(&philo, simu->timestamp);
 	init_activities(&philo);	
 	if ((simu->philos_id[id] = fork()) == 0)
