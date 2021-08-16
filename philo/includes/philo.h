@@ -81,7 +81,12 @@ int		take_forks(t_philo *philo);
 void	destroy_all_philosophers(t_philo_simu *simu);
 
 /*
-** init_simu.c
+** init_philosopher.c
+*/
+int     create_philosopher(t_philo_simu *simu, int id);
+
+/*
+** init_simultion.c
 */
 
 int		init_simu(int ac, char **av, t_philo_simu * simu);
@@ -104,7 +109,7 @@ int		create_monitor(t_philo_simu *simu);
 */
 
 int		shouldStopSimu(const t_philo *philo);
-int     create_philosopher(t_philo_simu *simu, int id);
+void	*routine(void *philosopher);
 
 /*
 ** time.c

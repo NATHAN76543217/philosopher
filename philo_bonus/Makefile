@@ -9,7 +9,7 @@ PATH_SRC	=	srcs
 PATH_OBJ	=	objs
 
 # List of sources
-SRCS_FILES	=	activity.c init_simulation.c listener.c log.c monitor.c philosopher.c time.c utils.c
+SRCS_FILES	=	activity.c eat_enough_listener.c end_simu_listener.c init_philosopher.c init_simulation.c log.c monitor.c philosopher.c time.c utils.c
 SRCS		=	$(addprefix $(PATH_SRC)/, $(SRCS_FILES)) main.c
 INC_FILES	=	$(shell find $(PATH_INC) -type f | cut -d/ -f2- )
 

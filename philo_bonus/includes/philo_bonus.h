@@ -1,14 +1,26 @@
-#ifndef PHILO_H
-# define PHILO_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_bonus.h                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/08/16 15:04:03 by nlecaill          #+#    #+#             */
+/*   Updated: 2021/08/16 16:10:30 by nlecaill         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <pthread.h>
-#include <fcntl.h>
-#include <sys/time.h>
-#include <semaphore.h>
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
+
+# include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <pthread.h>
+# include <fcntl.h>
+# include <sys/time.h>
+# include <semaphore.h>
 
 # define SYS_ERROR -2
 # define MEMORY_ERROR -1
@@ -18,22 +30,31 @@
 
 # define MAX_EAT 100
 # define MAX_TIME 10000
-# define MAX_TIME_S #MAX_TIME
-# define STRE(x) #x
-# define STRI(x) STRE(x)
+
 # define MAX_PHILO 100
 # define CHECK_DELAY 4
 
 # define FALSE 0
 # define TRUE 1
 
+/*
+** Defines for activities 
+*/
 # define THINKING 0
 # define EATING 1
 # define SLEEPING 2
 
-typedef struct		s_philo t_philo;
+/*
+** Defines for semaphores 
+*/
+# define FORKS 0
+# define STOP_SIMU 1
+# define EAT_ENOUGH 2
+# define WRITING 3
 
-typedef struct		s_philo_simu
+typedef struct s_philo	t_philo;
+
+typedef struct s_philo_simu
 {
 	int				number_of_philosopher;
 	int				time_to_die;
@@ -46,13 +67,12 @@ typedef struct		s_philo_simu
 	int				count_philo_eat_enough;
 	struct timeval	timestamp;
 	pid_t			*philos_id;
-	sem_t			*forks;
-	sem_t			*writing;
-	sem_t			*eat_enough;
-	sem_t			*stop_simu;
+	sem_t			*sem[4];
 }					t_philo_simu;
 
-typedef struct		s_philo
+typedef int	(*t_activity)(t_philo	*philo);
+
+typedef struct s_philo
 {
 	int				id;
 	int				alive;
@@ -62,9 +82,8 @@ typedef struct		s_philo
 	struct timeval	timestamp;
 	struct timeval	last_meal;
 	t_philo_simu	*simu;
-	int				(*activity[3]) (t_philo *philo);
-}					t_philo;
-
+	t_activity		activity[3];
+}				t_philo;
 
 /*
 ** activity.c
@@ -75,10 +94,16 @@ int		philo_sleep(t_philo *philo);
 int		take_forks(t_philo *philo);
 
 /*
+** init_philosopher.c
+*/
+
+int		create_philosopher(t_philo_simu *simu, int id);
+
+/*
 ** init_simu.c
 */
 
-int		init_simulation(int ac, char **av, t_philo_simu * simu);
+int		init_simulation(int ac, char **av, t_philo_simu *simu);
 
 /*
 ** listener.c
@@ -106,7 +131,7 @@ int		start_monitoring(t_philo *philo);
 ** philosopher.c
 */
 
-int     create_philosopher(t_philo_simu *simu, int id);
+void	philosopher(t_philo *philo);
 
 /*
 ** time.c
@@ -120,10 +145,7 @@ long	elapsedLastMeal(const t_philo *philo);
 */
 
 int		ft_atoi(const char *str);
+void	game_info(t_philo_simu const *simu);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 
-
-
-
-
-#endif		//PHILO_H
+#endif		//PHILO_BONUS_H

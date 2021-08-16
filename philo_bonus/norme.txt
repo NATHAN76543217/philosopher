@@ -1,0 +1,85 @@
+Missing or invalid header. Header are being reintroduced as a mandatory part of your files. This is not yet an error.
+main.c: Error!
+Error: TOO_FEW_TAB          (line:  13, col:   5):	Missing tabs for indent level
+Error: TAB_INSTEAD_SPC      (line:  13, col:   7):	Found tab when expecting space
+Error: TOO_FEW_TAB          (line:  14, col:   5):	Missing tabs for indent level
+Error: TOO_FEW_TAB          (line:  15, col:   5):	Missing tabs for indent level
+Error: TOO_FEW_TAB          (line:  18, col:   5):	Missing tabs for indent level
+Error: TAB_INSTEAD_SPC      (line:  18, col:   7):	Found tab when expecting space
+Error: SPC_BEFORE_NL        (line:  18, col:  44):	Space before newline
+Error: TOO_FEW_TAB          (line:  19, col:   5):	Missing tabs for indent level
+Error: SPC_BEFORE_NL        (line:  19, col:  43):	Space before newline
+Error: TOO_FEW_TAB          (line:  20, col:   5):	Missing tabs for indent level
+Error: SPACE_REPLACE_TAB    (line:  30, col:   8):	Found space when expecting tab
+Error: RETURN_PARENTHESIS   (line:  36, col:  16):	Return value must be in parenthesis
+Error: RETURN_PARENTHESIS   (line:  38, col:  16):	Return value must be in parenthesis
+Error: LINE_TOO_LONG        (line:  39, col:  82):	line too long
+Error: TAB_INSTEAD_SPC      (line:  39, col:  83):	Found tab when expecting space
+Error: CONSECUTIVE_NEWLINES (line:  43, col:   1):	Consecutive newlines
+Error: RETURN_PARENTHESIS   (line:  55, col:  20):	Return value must be in parenthesis
+Error: LINE_TOO_LONG        (line:  57, col:  82):	line too long
+Error: SPACE_REPLACE_TAB    (line:  67, col:   8):	Found space when expecting tab
+Error: SPACE_AFTER_KW       (line:  72, col:   5):	Missing space after keyword
+Error: SPC_BFR_PAR          (line:  72, col:  10):	Missing space before parenthesis (brace/bracket)
+Error: ASSIGN_IN_CONTROL    (line:  74, col:  18):	Assignment in control structure
+Error: RETURN_PARENTHESIS   (line:  75, col:  20):	Return value must be in parenthesis
+Error: TOO_MANY_TABS_FUNC   (line:  87, col:   9):	extra tabs before function name
+Error: NO_SPC_AFR_PAR       (line:  92, col:   9):	Extra space after parenthesis (brace/bracket)
+Error: ASSIGN_IN_CONTROL    (line:  92, col:  15):	Assignment in control structure
+Error: TOO_FEW_TAB          (line:  93, col:   5):	Missing tabs for indent level
+Error: TAB_INSTEAD_SPC      (line:  93, col:   7):	Found tab when expecting space
+Error: NO_SPC_AFR_PAR       (line:  93, col:   9):	Extra space after parenthesis (brace/bracket)
+Error: TOO_FEW_TAB          (line:  94, col:   5):	Missing tabs for indent level
+Error: NO_SPC_AFR_PAR       (line:  94, col:   9):	Extra space after parenthesis (brace/bracket)
+Error: SPC_BEFORE_NL        (line:  94, col:  55):	Space before newline
+Error: TOO_FEW_TAB          (line:  95, col:   5):	Missing tabs for indent level
+Error: NO_SPC_AFR_PAR       (line:  95, col:   9):	Extra space after parenthesis (brace/bracket)
+Error: MIXED_SPACE_TAB      (line:  96, col:  15):	Mixed spaces and tabs
+Error: TAB_INSTEAD_SPC      (line:  96, col:  16):	Found tab when expecting space
+Error: RETURN_PARENTHESIS   (line:  96, col:  17):	Return value must be in parenthesis
+Error: BRACE_SHOULD_EOL     (line:  99, col:   1):	Expected newline after brace
+Missing or invalid header. Header are being reintroduced as a mandatory part of your files. This is not yet an error.
+includes/philo_bonus.h: Error!
+	[31mError: Unrecognized token line 21, col 32[0m
+Missing or invalid header. Header are being reintroduced as a mandatory part of your files. This is not yet an error.
+srcs/activity.c: Error!
+Error: TOO_MANY_TABS_FUNC   (line:  15, col:   9):	extra tabs before function name
+Error: SPACE_REPLACE_TAB    (line:  17, col:   8):	Found space when expecting tab
+Error: ASSIGN_IN_CONTROL    (line:  20, col:  14):	Assignment in control structure
+Error: ASSIGN_IN_CONTROL    (line:  23, col:  14):	Assignment in control structure
+Error: RETURN_PARENTHESIS   (line:  29, col:  20):	Return value must be in parenthesis
+Error: LINE_TOO_LONG        (line:  29, col:  84):	line too long
+Error: RETURN_PARENTHESIS   (line:  32, col:  16):	Return value must be in parenthesis
+Error: LINE_TOO_LONG        (line:  32, col:  82):	line too long
+Error: RETURN_PARENTHESIS   (line:  34, col:  16):	Return value must be in parenthesis
+Error: LINE_TOO_LONG        (line:  34, col:  82):	line too long
+Error: TOO_MANY_TABS_FUNC   (line:  42, col:   9):	extra tabs before function name
+Error: RETURN_PARENTHESIS   (line:  46, col:  12):	Return value must be in parenthesis
+Error: RETURN_PARENTHESIS   (line:  55, col:  16):	Return value must be in parenthesis
+Error: LINE_TOO_LONG        (line:  55, col:  82):	line too long
+Error: TOO_MANY_TABS_FUNC   (line:  63, col:   9):	extra tabs before function name
+Error: RETURN_PARENTHESIS   (line:  71, col:  20):	Return value must be in parenthesis
+Error: LINE_TOO_LONG        (line:  71, col:  84):	line too long
+Error: RETURN_PARENTHESIS   (line:  78, col:  20):	Return value must be in parenthesis
+Error: LINE_TOO_LONG        (line:  78, col:  84):	line too long
+Missing or invalid header. Header are being reintroduced as a mandatory part of your files. This is not yet an error.
+srcs/eat_enough_listener.c: OK!
+srcs/end_simu_listener.c: OK!
+srcs/init_philosopher.c: OK!
+srcs/init_simulation.c: Error!
+Error: LINE_TOO_LONG        (line:  28, col:  85):	line too long
+Error: LINE_TOO_LONG        (line:  39, col:  84):	line too long
+Error: LINE_TOO_LONG        (line:  40, col:  82):	line too long
+Error: LINE_TOO_LONG        (line:  42, col: 104):	line too long
+Error: LINE_TOO_LONG        (line:  44, col: 104):	line too long
+Error: LINE_TOO_LONG        (line:  46, col: 106):	line too long
+Error: LINE_TOO_LONG        (line:  48, col: 126):	line too long
+Error: LINE_TOO_LONG        (line:  50, col: 155):	line too long
+Error: LINE_TOO_LONG        (line:  52, col: 135):	line too long
+Error: TOO_MANY_LINES       (line:  96, col:   1):	Function has more than 25 lines
+Error: TOO_MANY_LINES       (line: 138, col:   1):	Function has more than 25 lines
+srcs/log.c: OK!
+srcs/monitor.c: OK!
+srcs/philosopher.c: OK!
+srcs/time.c: OK!
+srcs/utils.c: OK!

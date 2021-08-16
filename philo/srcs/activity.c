@@ -16,15 +16,17 @@ static int	updateLastMeal(t_philo *philo)
 /*
 ** Eating phase of a philosopher
 */
-int			philo_eat(t_philo *philo)
+int	philo_eat(t_philo *philo)
 {
-	int err;
+	int	err;
 
 	log_philo("is eating", philo);
-	if ((err = updateLastMeal(philo)) != SUCCESS)
+	err = updateLastMeal(philo);
+	if (err != SUCCESS)
 		return (err);
 	usleep(philo->simu->time_to_eat * 1000);
-	if ((err = updateLastMeal(philo)) != SUCCESS)
+	err = updateLastMeal(philo);
+	if (err != SUCCESS)
 		return (err);
 	philo->eat_count++;
 	if (philo->eat_count == philo->simu->max_eating)
@@ -33,20 +35,22 @@ int			philo_eat(t_philo *philo)
 		philo->simu->count_philo_eat_enought++;
 		pthread_mutex_unlock(&(philo->simu->simu_m));
 	}	
-	pthread_mutex_unlock( &(philo->simu->forks[philo->left_fork_id]) );
-	pthread_mutex_unlock( &(philo->simu->forks[philo->right_fork_id]) );
-	printf("%ld %3d  has release two forks[%d][%d]\n", elapsedStart(*(philo->timestamp)), philo->id, philo->left_fork_id, philo->right_fork_id);
+	pthread_mutex_unlock(&(philo->simu->forks[philo->left_fork_id]));
+	pthread_mutex_unlock(&(philo->simu->forks[philo->right_fork_id]));
+	printf("%ld %3d  has release two forks[%d][%d]\n", \
+		elapsedStart(*(philo->timestamp)), \
+		philo->id, philo->left_fork_id, philo->right_fork_id);
 	return (SUCCESS);
 }
 
 /*
 ** Sleeping phase of a philosopher
 */
-int			philo_sleep(t_philo *philo)
+int	philo_sleep(t_philo *philo)
 {
 	log_philo("is sleeping", philo);
 	usleep(philo->simu->time_to_sleep * 1000);
-	return SUCCESS;
+	return (SUCCESS);
 }
 
 /*
@@ -55,15 +59,17 @@ int			philo_sleep(t_philo *philo)
 static int	take_fork(t_philo *philo, int fork_id)
 {
 	if (pthread_mutex_lock(&(philo->simu->forks[fork_id])))
-		return error_msg("mutex locking system error\n", SYS_ERROR);
-	printf("%ld %3d  has taken a fork. [%d]\n", elapsedStart(*(philo->timestamp)), philo->id, fork_id);
+		return (error_msg("mutex locking system error\n", SYS_ERROR));
+	printf("%ld %3d  has taken a fork. [%d]\n", \
+		elapsedStart(*(philo->timestamp)), \
+		philo->id, fork_id);
 	return (SUCCESS);
 }
 
 /*
 ** Getting forks philosopher's phase
 */
-int			take_forks(t_philo *philo)
+int	take_forks(t_philo *philo)
 {
 	log_philo("is thinking.", philo);
 	if (take_fork(philo, philo->right_fork_id))
