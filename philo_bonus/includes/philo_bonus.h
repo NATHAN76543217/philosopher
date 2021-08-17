@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sebastienlecaille <sebastienlecaille@st    +#+  +:+       +#+        */
+/*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 15:04:03 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/17 02:41:18 by sebastienle      ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 13:31:28 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@
 # define WRITING 3
 
 typedef struct s_philo	t_philo;
+typedef int				(*t_activity)(t_philo	*philo);
 
 typedef struct s_philo_simu
 {
@@ -71,8 +72,6 @@ typedef struct s_philo_simu
 	pid_t			*philos_id;
 	sem_t			*sem[4];
 }					t_philo_simu;
-
-typedef int	(*t_activity)(t_philo	*philo);
 
 typedef struct s_philo
 {

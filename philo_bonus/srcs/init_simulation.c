@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_simulation.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sebastienlecaille <sebastienlecaille@st    +#+  +:+       +#+        */
+/*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 13:45:22 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/17 02:41:05 by sebastienle      ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 13:21:38 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,16 +85,13 @@ static int	check_param_validity(t_philo_simu const *simu)
 			" or more than 100 philosophers.\n", ARGUMENT_ERROR));
 	else if (simu->time_to_die <= 0 || simu->time_to_die > MAX_SIMU_TIME)
 		return (error_msg("You cannot have a 'time_to_die' value " \
-			"less or equal than 0 or greater than 30000.\n", \
-				ARGUMENT_ERROR));
+			"less or equal than 0 or greater than 30000.\n", ARGUMENT_ERROR));
 	else if (simu->time_to_eat <= 0 || simu->time_to_eat > MAX_EAT_TIME)
 		return (error_msg("You cannot have a 'time_to_eat' value " \
-			"less or equal than 0 or greater than 10000.\n", \
-				ARGUMENT_ERROR));
+			"less or equal than 0 or greater than 10000.\n", ARGUMENT_ERROR));
 	else if (simu->time_to_sleep <= 0 || simu->time_to_sleep > MAX_SLEEP_TIME)
 		return (error_msg("You cannot have a 'time_to_sleep' value " \
-			" less or equal than 0 or greater than 10000.\n", \
-				ARGUMENT_ERROR));
+			" less or equal than 0 or greater than 10000.\n", ARGUMENT_ERROR));
 	return (check_param_validity_next(simu));
 }
 

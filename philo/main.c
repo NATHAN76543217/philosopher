@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/08/17 13:16:22 by nlecaill          #+#    #+#             */
+/*   Updated: 2021/08/17 13:16:23 by nlecaill         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 /*
@@ -5,12 +17,12 @@
 */
 static int	clear_all(t_philo_simu *simu)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (++i < simu->nb_fork)
 		if (pthread_mutex_destroy(&(simu->forks[i])) != SUCCESS)
-			return error_msg("mutex destruction failed\n", SYS_ERROR);
+			return (error_msg("mutex destruction failed\n", SYS_ERROR));
 	if (simu->forks)
 		free(simu->forks);
 	if (simu->philos)
@@ -18,9 +30,8 @@ static int	clear_all(t_philo_simu *simu)
 	if (simu->threads)
 		free(simu->threads);
 	printf("Simulation cleared.\n");
-	return SUCCESS;
+	return (SUCCESS);
 }
-
 
 /*
 ** Wait for the simulation is ending before cleaning context
@@ -32,7 +43,6 @@ static int	wait_simulation_end(t_philo_simu *simu)
 	t_philo	*philo;
 
 	i = -1;
-	
 	err = pthread_join(simu->monitor, NULL);
 	if (err != SUCCESS)
 		return (error_msg("Error when joining monitor thread.\n", \
@@ -40,7 +50,7 @@ static int	wait_simulation_end(t_philo_simu *simu)
 	log_simu("monitor joined", simu);
 	while (++i < simu->number_of_philosopher)
 	{
-		err = pthread_join(simu->threads[i], (void * )&philo);
+		err = pthread_join(simu->threads[i], (void *)&philo);
 		if (err != SUCCESS)
 			return (error_msg("Error when joining two threads.\n", \
 				SYS_ERROR));
@@ -60,11 +70,11 @@ static int	start_simulation(t_philo_simu *simu)
 	int	err;
 
 	i = -1;
-	while(++i < simu->number_of_philosopher)
+	while (++i < simu->number_of_philosopher)
 	{
 		err = create_philosopher(simu, i);
 		if (err != SUCCESS)
-			return err;
+			return (err);
 	}
 	log_simu("all the philosophers are launched.", simu);
 	create_monitor(simu);

@@ -6,7 +6,7 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 17:39:44 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 17:41:13 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 13:13:33 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,24 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 		i++;
 	}
 	return (dest);
+}
+
+/*
+** Dump simulation config
+*/
+void	start_game_info(t_philo_simu const *simu)
+{
+	printf("\n---- philo simulation ----\n\n");
+	printf("number_of_philosophers = %d\n", simu->number_of_philosopher);
+	printf("time_to_die  = %d\n", simu->time_to_die);
+	printf("time_to_eat = %d\n", simu->time_to_eat);
+	printf("time_to_sleep = %d\n", simu->time_to_sleep);
+	if (simu->max_eating < 0)
+		printf("[number_of_times_each_philosopher_must_eat] = \"(disactived)\"\n");
+	else
+		printf("[number_of_times_each_philosopher_must_eat] = %d\n", \
+			simu->max_eating);
+	printf("nb_fork = %d\n", simu->nb_fork);
+	dprintf(1, "Simulation initialisation done.\n\n------\n\n");
+	return ;
 }
