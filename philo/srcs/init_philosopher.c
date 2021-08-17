@@ -6,29 +6,28 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 18:03:26 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 18:22:36 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 19:29:40 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /*
-** Initialise all timestamp values in a philosopher
+** Initialise all timestamp values in a philosopher to 'start_timestamp'
 */
-static int	init_timestamps(t_philo *philo, struct timeval start_timestamp)
+static int	init_timestamps_to(t_philo *philo, struct timeval start_timestamp)
 {
-	struct timeval	*timestamp[2];
-
-	timestamp[0] = (struct timeval *) malloc(sizeof(struct timeval));
-	timestamp[1] = (struct timeval *) malloc(sizeof(struct timeval));
-	if (timestamp[0] == NULL || timestamp[1] == NULL)
-		return (error_msg("A memory error happen when malloc (philo)\n", \
-			MEMORY_ERROR));
-	philo->timestamp = ft_memcpy((void *) timestamp[0], \
-		(void *) &start_timestamp, \
+	ft_memcpy(
+		(void *) &(philo->timestamp),
+		(void *) &start_timestamp,
 		sizeof(struct timeval));
-	philo->last_meal = ft_memcpy((void *) timestamp[1], \
-		(void *) &start_timestamp, \
+	ft_memcpy(
+		(void *) &(philo->last_meal),
+		(void *) &start_timestamp,
+		sizeof(struct timeval));
+	ft_memcpy(
+		(void *) &(philo->start_activity),
+		(void *) &start_timestamp,
 		sizeof(struct timeval));
 	return (SUCCESS);
 }
@@ -51,7 +50,7 @@ static int	create_philosopher_next(t_philo_simu *simu, t_philo *philo)
 	int	err;
 
 	init_activities(philo);
-	err = init_timestamps(philo, simu->timestamp);
+	err = init_timestamps_to(philo, simu->timestamp);
 	if (err != SUCCESS)
 		return (err);
 	if (pthread_mutex_init(&(philo->philo_m), NULL) != SUCCESS)

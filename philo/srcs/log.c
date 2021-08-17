@@ -6,7 +6,7 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 18:30:44 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 18:30:45 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 19:30:11 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 */
 void	log_philo(char *str, const t_philo *philo)
 {
-	printf("%ld %3d  %s\n", elapsedStart(*(philo->timestamp)), philo->id, str);
+	printf("%ld %3d  %s\n", elapsedSince(philo->timestamp), philo->id, str);
 }
 
 /*
@@ -25,7 +25,7 @@ void	log_philo(char *str, const t_philo *philo)
 */
 void	log_simu(char *str, const t_philo_simu *simu)
 {
-	printf("%ld simu %s\n", elapsedStart(simu->timestamp), str);
+	printf("%ld simu %s\n", elapsedSince(simu->timestamp), str);
 }
 
 /*

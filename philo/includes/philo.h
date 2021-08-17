@@ -6,7 +6,7 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 13:17:20 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/17 13:33:03 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 19:26:41 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 # define EATING 1
 # define SLEEPING 2
 
-# define DEBUG
+# define CHECK_DELAY 4
 
 typedef struct s_philo	t_philo;
 typedef int				(*t_activity)(t_philo	*philo);
@@ -70,8 +70,9 @@ typedef struct s_philo
 	int				right_fork_id;
 	int				left_fork_id;
 	int				eat_count;
-	struct timeval	*timestamp;
-	struct timeval	*last_meal;
+	struct timeval	timestamp;
+	struct timeval	last_meal;
+	struct timeval	start_activity;
 	pthread_mutex_t	philo_m;
 	t_philo_simu	*simu;
 	t_activity		activity[3];
@@ -126,8 +127,8 @@ void	*routine(void *philosopher);
 ** time.c
 */
 
-long	elapsedStart(const struct timeval timestamp);
-long	elapsedLastMeal(const t_philo *philo);
+int		updateToNow(struct timeval *timestamp);
+long	elapsedSince(const struct timeval timestamp);
 
 /*
 ** utils.c

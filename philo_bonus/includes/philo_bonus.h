@@ -6,7 +6,7 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 15:04:03 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/17 13:31:28 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 19:16:14 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ typedef struct s_philo_simu
 	int				max_eating;
 	int				nb_fork_init;
 	int				running;
-	pthread_t		listener_id;
 	int				count_philo_eat_enough;
+	pthread_t		listener_id;
 	struct timeval	timestamp;
 	pid_t			*philos_id;
 	sem_t			*sem[4];
@@ -82,6 +82,7 @@ typedef struct s_philo
 	pthread_t		monitor_id;
 	struct timeval	timestamp;
 	struct timeval	last_meal;
+	struct timeval	start_activity;
 	t_philo_simu	*simu;
 	t_activity		activity[3];
 }				t_philo;
@@ -133,13 +134,15 @@ int		start_monitoring(t_philo *philo);
 */
 
 void	philosopher(t_philo *philo);
+void	*kill_philo(t_philo *philo, int ret);
+int		routine_ending(t_philo *philo);
 
 /*
 ** time.c
 */
 
-long	elapsedStart(const struct timeval timestamp);
-long	elapsedLastMeal(const t_philo *philo);
+int		updateToNow(struct timeval *timestamp);
+long	elapsedSince(const struct timeval timestamp);
 
 /*
 ** utils.c

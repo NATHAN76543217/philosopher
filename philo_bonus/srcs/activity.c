@@ -6,18 +6,25 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 15:51:07 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 15:54:22 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 19:37:15 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
 /*
-** Update the last_meal timestamp to now.
+** Suspend process for a certain amount of time 
+** in non-blocking manner
 */
-static int	updateLastMeal(t_philo *philo)
+static int	waiting(t_philo *philo, int ms)
 {
-	gettimeofday(&(philo->last_meal), NULL);
+	updateToNow(&(philo->start_activity));
+	while (elapsedSince(philo->start_activity) < ms)
+	{
+		if (philo->alive == FALSE)
+			break ;
+		usleep(CHECK_DELAY * 1000);
+	}
 	return (SUCCESS);
 }
 
@@ -29,13 +36,10 @@ int	philo_eat(t_philo *philo)
 	int	err;
 
 	log_philo("is eating.", philo);
-	err = updateLastMeal(philo);
+	err = updateToNow(&(philo->last_meal));
 	if (err != SUCCESS)
 		return (err);
-	usleep(philo->simu->time_to_eat * 1000);
-	err = updateLastMeal(philo);
-	if (err != SUCCESS)
-		return (err);
+	waiting(philo, philo->simu->time_to_eat);
 	philo->eat_count++;
 	if (philo->eat_count == philo->simu->max_eating)
 	{
@@ -59,7 +63,7 @@ int	philo_eat(t_philo *philo)
 int	philo_sleep(t_philo *philo)
 {
 	log_philo("is sleeping", philo);
-	usleep(philo->simu->time_to_sleep * 1000);
+	waiting(philo, philo->simu->time_to_sleep);
 	return (SUCCESS);
 }
 

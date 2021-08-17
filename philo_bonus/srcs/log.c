@@ -6,7 +6,7 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 13:27:49 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 14:36:41 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 19:18:58 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 */
 int	log_syserror(char *str, const t_philo *philo)
 {
-	printf("%ld %3d   %s\n", elapsedStart(philo->timestamp), philo->id, str);
+	printf("%ld %3d   %s\n", elapsedSince(philo->timestamp), philo->id, str);
 	return (SYS_ERROR);
 }
 
@@ -29,15 +29,15 @@ void	log_philo(char *str, const t_philo *philo)
 	if (sem_wait(philo->simu->sem[WRITING]) != SUCCESS)
 	{	
 		printf("%ld %3d   critical system error in semaphore (writing)\n", \
-			elapsedStart(philo->timestamp), \
+			elapsedSince(philo->timestamp), \
 			philo->id);
 		return ;
 	}
-	printf("%ld %3d   %s\n", elapsedStart(philo->timestamp), philo->id, str);
+	printf("%ld %3d   %s\n", elapsedSince(philo->timestamp), philo->id, str);
 	if (sem_post(philo->simu->sem[WRITING]) != SUCCESS)
 	{
 		printf("%ld %3d   critical system error in semaphore (writing)\n", \
-			elapsedStart(philo->timestamp), \
+			elapsedSince(philo->timestamp), \
 			philo->id);
 		return ;
 	}
@@ -51,15 +51,15 @@ void	log_simu(char *str, const t_philo_simu *simu)
 	if (sem_wait(simu->sem[WRITING]) != SUCCESS)
 	{
 		printf("%ld   -   critical system error in semaphore (writing) %s\n", \
-			elapsedStart(simu->timestamp), \
+			elapsedSince(simu->timestamp), \
 			str);
 		return ;
 	}
-	printf("%ld   -   %s\n", elapsedStart(simu->timestamp), str);
+	printf("%ld   -   %s\n", elapsedSince(simu->timestamp), str);
 	if (sem_post(simu->sem[WRITING]) != SUCCESS)
 	{
 		printf("%ld   -   critical system error in semaphore (writing2)%s\n", \
-			elapsedStart(simu->timestamp), \
+			elapsedSince(simu->timestamp), \
 			str);
 		return ;
 	}

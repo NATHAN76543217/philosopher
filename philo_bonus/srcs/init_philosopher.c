@@ -6,7 +6,7 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 13:16:11 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 13:18:24 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 18:15:04 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,10 @@ static int	init_timestamps_to(t_philo *philo, struct timeval start_timestamp)
 		sizeof(struct timeval));
 	ft_memcpy(
 		(void *) &(philo->last_meal),
+		(void *) &start_timestamp,
+		sizeof(struct timeval));
+	ft_memcpy(
+		(void *) &(philo->start_activity),
 		(void *) &start_timestamp,
 		sizeof(struct timeval));
 	return (SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 18:34:10 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 18:34:18 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 19:28:52 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,6 @@ static void	destroy_philosopher(t_philo *philo)
 	if (!philo)
 		return ;
 	log_philo("structure destroyed", philo);
-	if (philo->timestamp)
-		free(philo->timestamp);
-	if (philo->last_meal)
-		free(philo->last_meal);
 	free(philo);
 	return ;
 }

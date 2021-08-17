@@ -6,7 +6,7 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 18:24:30 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 18:24:31 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 20:01:15 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,13 @@ static void	*monitor(void *simulation)
 	{
 		usleep(1000);
 		pthread_mutex_lock(&(simu->philos[i]->philo_m));
-		if (elapsedLastMeal(simu->philos[i]) > simu->time_to_die)
+		if (elapsedSince(simu->philos[i]->last_meal) > simu->time_to_die)
 		{
 			simu->philos[i]->alive = FALSE;
+			simu->running = FALSE;
 			printf("%ld %3d  must die cause doesn't have eat since %ld ms\n", \
-				elapsedStart(*(simu->philos[i]->timestamp)), \
-				simu->philos[i]->id, elapsedLastMeal(simu->philos[i]));
+				elapsedSince(simu->philos[i]->timestamp), \
+				simu->philos[i]->id, elapsedSince(simu->philos[i]->last_meal));
 			pthread_mutex_unlock(&(simu->philos[i]->philo_m));
 			break ;
 		}

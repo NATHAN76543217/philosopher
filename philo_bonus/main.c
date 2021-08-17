@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sebastienlecaille <sebastienlecaille@st    +#+  +:+       +#+        */
+/*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 17:17:32 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/17 02:42:20 by sebastienle      ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 19:22:20 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int	clear_simulation(t_philo_simu *simu)
 	if (destroy_semaphores(simu) != SUCCESS)
 		return (error_msg("semaphore destruction failed\n", SYS_ERROR));
 	printf("%ld   -   %s\n", \
-		elapsedStart(simu->timestamp), "Simulation cleared.");
+		elapsedSince(simu->timestamp), "Simulation cleared.");
 	return (SUCCESS);
 }
 
@@ -67,7 +67,7 @@ static int	wait_simulation_end(t_philo_simu *simu)
 			return (error_msg("Error when joining two process.\n", SYS_ERROR));
 		simu->running = FALSE;
 		printf("%ld %3d   process joined\n", \
-			elapsedStart(simu->timestamp), i + 1 );
+			elapsedSince(simu->timestamp), i + 1 );
 	}
 	return (SUCCESS);
 }
@@ -95,8 +95,6 @@ static int	start_simulation(t_philo_simu *simu)
 /*
 ** Program's entrypoint
 */
-//TODO check if structure can be inline initialised with norminette
-//TODO norme project
 //TODO Check for leaks
 int	main(int ac, char **av)
 {
@@ -121,7 +119,7 @@ int	main(int ac, char **av)
 			}
 		}
 	}	
-	printf("Program exit with return code: %d\n", err);
+	printf("\nProgram exit with return code: %d\n", err);
 	printf("Out of program\n");
 	return (err);
 }

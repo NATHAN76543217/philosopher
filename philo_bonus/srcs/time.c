@@ -6,16 +6,25 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 12:03:53 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 12:04:04 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 19:15:52 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
 /*
-** Return the number of milliseconds elapsed since the timestamp passed in param
+** Update the given timestamp to now.
 */
-long	elapsedStart(const struct timeval timestamp)
+int	updateToNow(struct timeval *timestamp)
+{
+	gettimeofday(timestamp, NULL);
+	return (SUCCESS);
+}
+
+/*
+** Return the number of milliseconds elapsed since the timestamp passed in params
+*/
+long	elapsedSince(const struct timeval timestamp)
 {
 	long			last[2];
 	long			now[2];
@@ -24,23 +33,6 @@ long	elapsedStart(const struct timeval timestamp)
 	gettimeofday(&tInit, NULL);
 	last[0] = (long) timestamp.tv_sec;
 	last[1] = (long) timestamp.tv_usec;
-	now[0] = (long) tInit.tv_sec;
-	now[1] = (long) tInit.tv_usec;
-	return (((now[0] - last[0]) * 1000000 + (now[1] - last[1])) / 1000);
-}
-
-/*
-** Return the number of milliseconds elapsed since the last meal
-*/
-long	elapsedLastMeal(const t_philo *const philo)
-{
-	long			last[2];
-	long			now[2];
-	struct timeval	tInit;
-
-	gettimeofday(&tInit, NULL);
-	last[0] = (long) philo->last_meal.tv_sec;
-	last[1] = (long) philo->last_meal.tv_usec;
 	now[0] = (long) tInit.tv_sec;
 	now[1] = (long) tInit.tv_usec;
 	return (((now[0] - last[0]) * 1000000 + (now[1] - last[1])) / 1000);

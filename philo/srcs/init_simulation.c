@@ -6,7 +6,7 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 12:45:32 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/17 13:22:37 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 21:14:18 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,12 @@ int	init_simu_2(t_philo_simu *simu)
 {
 	int	err;
 
+	err = check_param_validity(simu);
+	if (err != SUCCESS)
+		return (err);
 	if (gettimeofday(&(simu->timestamp), NULL) != SUCCESS)
 		return (SYS_ERROR);
 	err = malloc_simu(simu);
-	if (err != SUCCESS)
-		return (err);
-	err = check_param_validity(simu);
 	if (err != SUCCESS)
 		return (err);
 	err = mutex_initialisation(simu);

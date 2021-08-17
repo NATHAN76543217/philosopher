@@ -6,22 +6,26 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/17 13:17:10 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/17 13:17:12 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 19:59:53 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /*
-** Update the last_meal timestamp to now.
+** Suspend process for a certain amount of time 
+** in non-blocking manner
 */
-static int	updateLastMeal(t_philo *philo)
+static int	waiting(t_philo *philo, int ms)
 {
-	if (pthread_mutex_lock(&(philo->philo_m)) != SUCCESS)
-		return (error_msg("mutex locking system error\n", SYS_ERROR));
-	gettimeofday(philo->last_meal, NULL);
-	if (pthread_mutex_unlock(&(philo->philo_m)) != SUCCESS)
-		return (error_msg("mutex locking system error\n", SYS_ERROR));
+	updateToNow(&(philo->start_activity));
+	while (elapsedSince(philo->start_activity) < ms)
+	{
+		if (philo->alive == FALSE
+			|| philo->simu->running == FALSE)
+			break ;
+		usleep(CHECK_DELAY * 1000);
+	}
 	return (SUCCESS);
 }
 
@@ -33,11 +37,10 @@ int	philo_eat(t_philo *philo)
 	int	err;
 
 	log_philo("is eating", philo);
-	err = updateLastMeal(philo);
+	err = updateToNow(&(philo->last_meal));
 	if (err != SUCCESS)
 		return (err);
-	usleep(philo->simu->time_to_eat * 1000);
-	err = updateLastMeal(philo);
+	waiting(philo, philo->simu->time_to_eat);
 	if (err != SUCCESS)
 		return (err);
 	philo->eat_count++;
@@ -50,7 +53,7 @@ int	philo_eat(t_philo *philo)
 	pthread_mutex_unlock(&(philo->simu->forks[philo->left_fork_id]));
 	pthread_mutex_unlock(&(philo->simu->forks[philo->right_fork_id]));
 	printf("%ld %3d  has release two forks[%d][%d]\n", \
-		elapsedStart(*(philo->timestamp)), \
+		elapsedSince(philo->timestamp), \
 		philo->id, philo->left_fork_id, philo->right_fork_id);
 	return (SUCCESS);
 }
@@ -61,7 +64,7 @@ int	philo_eat(t_philo *philo)
 int	philo_sleep(t_philo *philo)
 {
 	log_philo("is sleeping", philo);
-	usleep(philo->simu->time_to_sleep * 1000);
+	waiting(philo, philo->simu->time_to_sleep);
 	return (SUCCESS);
 }
 
@@ -73,7 +76,7 @@ static int	take_fork(t_philo *philo, int fork_id)
 	if (pthread_mutex_lock(&(philo->simu->forks[fork_id])))
 		return (error_msg("mutex locking system error\n", SYS_ERROR));
 	printf("%ld %3d  has taken a fork. [%d]\n", \
-		elapsedStart(*(philo->timestamp)), \
+		elapsedSince(philo->timestamp), \
 		philo->id, fork_id);
 	return (SUCCESS);
 }

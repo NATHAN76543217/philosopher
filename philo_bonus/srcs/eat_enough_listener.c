@@ -6,7 +6,7 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 15:50:47 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 15:50:49 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 19:18:12 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	*listener_unlocked(t_philo_simu *simu)
 	if (sem_post(simu->sem[STOP_SIMU]) != SUCCESS)
 	{
 		printf("%ld   -   critical system error in semaphore (stop_simu)\n", \
-			elapsedStart(simu->timestamp));
+			elapsedSince(simu->timestamp));
 		return (NULL);
 	}
 	log_simu("eat_enough listener stopped.", simu);
@@ -50,7 +50,7 @@ static void	*eat_enough_listener(void *simulation)
 		if (sem_wait(simu->sem[EAT_ENOUGH]) != SUCCESS)
 		{
 			printf("%ld   -   critical system error in semaphore (%s)\n", \
-				elapsedStart(simu->timestamp), \
+				elapsedSince(simu->timestamp), \
 				"eat_enough");
 			return (NULL);
 		}
@@ -67,7 +67,7 @@ int	stop_eat_enough_listener(t_philo_simu *simu)
 	if (sem_post(simu->sem[EAT_ENOUGH]) != SUCCESS)
 	{
 		printf("%ld   -   critical system error in semaphore (eat_enought)\n", \
-			elapsedStart(simu->timestamp));
+			elapsedSince(simu->timestamp));
 		return (SYS_ERROR);
 	}
 	if (pthread_join(simu->listener_id, NULL) != SUCCESS)

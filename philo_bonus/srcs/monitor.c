@@ -6,7 +6,7 @@
 /*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 13:26:17 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 14:36:22 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 19:20:11 by nlecaill         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,14 @@
 */
 void	set_philo_should_die(t_philo *philo)
 {
-	printf("%ld %3d   must die cause doesn't have eat since %ld ms\n", \
-		elapsedStart(philo->timestamp), \
+	printf("%ld %3d   must die last eating = %ld ms\n", \
+		elapsedSince(philo->timestamp), \
 		philo->id, \
-		elapsedLastMeal(philo));
+		elapsedSince(philo->last_meal));
 	philo->alive = FALSE;
-	sem_post(philo->simu->sem[STOP_SIMU]);
-	if (philo->current == SLEEPING)
-	{
-		log_philo("died.", philo);
-		exit(EXIT_SUCCESS);
-	}
+	if (sem_post(philo->simu->sem[STOP_SIMU]) != SUCCESS)
+		log_syserror("critical system error in semaphore " \
+			"(monitor - stop_simu)", philo);
 }
 
 /*
@@ -35,21 +32,18 @@ void	set_philo_should_die(t_philo *philo)
 */
 static void	*monitor(void *philosopher)
 {
-	int		i;
 	t_philo	*philo;
 
-	i = 0;
 	philo = (t_philo *) philosopher;
 	log_philo("monitor started.", philo);
 	while (philo->alive)
 	{
-		usleep(CHECK_DELAY * 1000);
-		if (elapsedLastMeal(philo) > philo->simu->time_to_die)
+		if (elapsedSince(philo->last_meal) > philo->simu->time_to_die)
 		{
 			set_philo_should_die(philo);
 			break ;
 		}
-		i = (i + 1) % philo->simu->number_of_philosopher;
+		usleep(CHECK_DELAY * 1000);
 	}
 	log_philo("monitor stopped.", philo);
 	return (NULL);
