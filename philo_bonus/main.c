@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: sebastienlecaille <sebastienlecaille@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 17:17:32 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 17:38:56 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 02:42:20 by sebastienle      ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,9 +112,12 @@ int	main(int ac, char **av)
 			err = wait_simulation_end(&simu);
 			if (err == SUCCESS)
 			{
-				err == clear_simulation(&simu);
+				err = clear_simulation(&simu);
 				if (err == SUCCESS)
+				{
+					printf("Out of program\n");
 					return (SUCCESS);
+				}
 			}
 		}
 	}	

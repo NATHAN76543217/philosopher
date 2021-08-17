@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: sebastienlecaille <sebastienlecaille@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 15:04:03 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 16:10:30 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 02:41:18 by sebastienle      ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@
 # define ARGUMENT_ERROR 1
 # define END_SIMULATION 2
 
-# define MAX_EAT 100
-# define MAX_TIME 10000
-
+# define MAX_SLEEP_TIME 10000
+# define MAX_EAT_TIME 10000
+# define MAX_SIMU_TIME 30000
+# define MAX_EAT_LIMIT 100
 # define MAX_PHILO 100
+
 # define CHECK_DELAY 4
 
 # define FALSE 0

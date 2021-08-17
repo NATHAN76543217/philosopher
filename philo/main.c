@@ -17,9 +17,7 @@ static int	clear_all(t_philo_simu *simu)
 		free(simu->philos);
 	if (simu->threads)
 		free(simu->threads);
-	#ifdef DEBUG
-		printf("Simulation cleared.\n");
-	#endif
+	printf("Simulation cleared.\n");
 	return SUCCESS;
 }
 
@@ -35,13 +33,17 @@ static int	wait_simulation_end(t_philo_simu *simu)
 
 	i = -1;
 	
-	if ((err = pthread_join(simu->monitor, NULL)) != SUCCESS)
-		return (error_msg("Error when joining monitor thread.\n", SYS_ERROR));
+	err = pthread_join(simu->monitor, NULL);
+	if (err != SUCCESS)
+		return (error_msg("Error when joining monitor thread.\n", \
+			SYS_ERROR));
 	log_simu("monitor joined", simu);
 	while (++i < simu->number_of_philosopher)
 	{
-		if ((err = pthread_join(simu->threads[i], (void * )&philo)) != SUCCESS)
-			return (error_msg("Error when joining two threads.\n", SYS_ERROR));
+		err = pthread_join(simu->threads[i], (void * )&philo);
+		if (err != SUCCESS)
+			return (error_msg("Error when joining two threads.\n", \
+				SYS_ERROR));
 		log_philo("thread joined", philo);
 	}
 	destroy_all_philosophers(simu);
@@ -54,13 +56,14 @@ static int	wait_simulation_end(t_philo_simu *simu)
 */
 static int	start_simulation(t_philo_simu *simu)
 {
-	int i;
+	int	i;
 	int	err;
 
 	i = -1;
 	while(++i < simu->number_of_philosopher)
 	{
-		if ((err = create_philosopher(simu, i)) != SUCCESS)
+		err = create_philosopher(simu, i);
+		if (err != SUCCESS)
 			return err;
 	}
 	log_simu("all the philosophers are launched.", simu);
@@ -73,18 +76,28 @@ static int	start_simulation(t_philo_simu *simu)
 ** Program's entrypoint
 */
 //TODO check if structure can be inline initialised with norminette
-//TODO ask for removing should stop message
+//TODO removing should stop message?
 //TODO secure every mutex call
-//TODO change makefile with all files explicitly named
-int			main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	int				err;
 	t_philo_simu	simu;
 
-	if (( err = init_simu(ac, av, &simu)) != SUCCESS
-	||	( err = start_simulation(&simu)) != SUCCESS
-	||	( err = wait_simulation_end(&simu)) != SUCCESS )
-		return (printf("Program exit with return code: %d\n", err));
+	err = init_simu(ac, av, &simu);
+	if (err == SUCCESS)
+	{
+		err = start_simulation(&simu);
+		if (err == SUCCESS)
+		{
+			err = wait_simulation_end(&simu);
+			if (err == SUCCESS)
+			{
+				printf("Out of program\n");
+				return (SUCCESS);
+			}
+		}
+	}
+	printf("Program exit with return code: %d\n", err);
 	printf("Out of program\n");
-	return (SUCCESS);
+	return (err);
 }

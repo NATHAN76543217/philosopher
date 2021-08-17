@@ -3,37 +3,77 @@
 /*                                                        :::      ::::::::   */
 /*   init_simulation.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nlecaill <nlecaill@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: sebastienlecaille <sebastienlecaille@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/16 13:45:22 by nlecaill          #+#    #+#             */
-/*   Updated: 2021/08/16 15:50:19 by nlecaill         ###   ########lyon.fr   */
+/*   Updated: 2021/08/17 02:41:05 by sebastienle      ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
 /*
+**	static int	check_param_validity_next(t_philo_simu const *simu)
+**	{
+**		if (simu->max_eating < -1 || simu->max_eating > MAX_EAT)
+**			return (error_msg("You cannot have a " \
+**				"'number_of_times_each_philosopher_must_eat' value " \
+**				"less than -1 or greater than " \
+**				STRI(MAX_EAT) ".\n", ARGUMENT_ERROR));
+**		else if (simu->max_eating == 0)
+**			return (error_msg("You cannot have a " \
+**				"'number_of_times_each_philosopher_must_eat' value " \
+**				"equal to 0. You can disable this option with the value -1."\
+**				STRI(MAX_EAT) ".\n", ARGUMENT_ERROR));
+**		else if (simu->nb_fork_init < 2)
+**			return (error_msg("You cannot have a number of forks less than 2." \
+**				"\nThis behavior is unexpected, please report us the problem.\n", \
+**				SYS_ERROR));
+**		return (SUCCESS);
+**	}
+*/
+/*
 ** Check if the simulation's settings are correct 
 */
 static int	check_param_validity_next(t_philo_simu const *simu)
 {
-	if (simu->max_eating < -1 || simu->max_eating > MAX_EAT)
+	if (simu->max_eating < -1 || simu->max_eating > MAX_EAT_LIMIT)
 		return (error_msg("You cannot have a " \
 			"'number_of_times_each_philosopher_must_eat' value " \
-			"less than -1 or greater than " \
-			STRI(MAX_EAT) ".\n", ARGUMENT_ERROR));
+			"less than -1 or greater than 100.\n", ARGUMENT_ERROR));
 	else if (simu->max_eating == 0)
 		return (error_msg("You cannot have a " \
 			"'number_of_times_each_philosopher_must_eat' value " \
-			"equal to 0. You can disable this option with the value -1."\
-			STRI(MAX_EAT) ".\n", ARGUMENT_ERROR));
+			"equal to 0. You can disable this option " \
+			"with the value -1.\n", ARGUMENT_ERROR));
 	else if (simu->nb_fork_init < 2)
-		return (error_msg("You cannot have a number of forks less than 2." \
-			"\nThis behavior is unexpected, please report us the problem.\n", \
-			SYS_ERROR));
+		return (error_msg("You cannot have a number of forks " \
+			"less than 2.\nThis behavior is unexpected, " \
+			"please report us the problem.\n", SYS_ERROR));
 	return (SUCCESS);
 }
 
+/*
+**	static int	check_param_validity(t_philo_simu const *simu)
+**	{
+**		if (simu->number_of_philosopher <= 0
+**			|| simu->number_of_philosopher > MAX_PHILO)
+**			return (error_msg("You cannot have less than 1 philosopher " \
+**				" or more than " STRI(MAX_PHILO) ".\n", ARGUMENT_ERROR));
+**		else if (simu->time_to_die <= 0 || simu->time_to_die > MAX_TIME)
+**			return (error_msg("You cannot have a 'time_to_die' value " \
+**				"less or equal than 0 or greater than " \
+**				STRI(MAX_TIME) ".\n", ARGUMENT_ERROR));
+**		else if (simu->time_to_eat <= 0 || simu->time_to_eat > MAX_TIME)
+**			return (error_msg("You cannot have a 'time_to_eat' value " \
+**				"less or equal than 0 or greater than " \
+**				STRI(MAX_TIME) ".\n", ARGUMENT_ERROR));
+**		else if (simu->time_to_sleep <= 0 || simu->time_to_sleep > MAX_TIME)
+**			return (error_msg("You cannot have a 'time_to_sleep' value " \
+**				" less or equal than 0 or greater than " \
+**				STRI(MAX_TIME) ".\n", ARGUMENT_ERROR));
+**		return (check_param_validity_next(simu));
+**	}*/
 /*
 ** Check if the simulation's settings are correct 
 */
@@ -42,19 +82,19 @@ static int	check_param_validity(t_philo_simu const *simu)
 	if (simu->number_of_philosopher <= 0
 		|| simu->number_of_philosopher > MAX_PHILO)
 		return (error_msg("You cannot have less than 1 philosopher " \
-			" or more than " STRI(MAX_PHILO) ".\n", ARGUMENT_ERROR));
-	else if (simu->time_to_die <= 0 || simu->time_to_die > MAX_TIME)
+			" or more than 100 philosophers.\n", ARGUMENT_ERROR));
+	else if (simu->time_to_die <= 0 || simu->time_to_die > MAX_SIMU_TIME)
 		return (error_msg("You cannot have a 'time_to_die' value " \
-			"less or equal than 0 or greater than " \
-			STRI(MAX_TIME) ".\n", ARGUMENT_ERROR));
-	else if (simu->time_to_eat <= 0 || simu->time_to_eat > MAX_TIME)
+			"less or equal than 0 or greater than 30000.\n", \
+				ARGUMENT_ERROR));
+	else if (simu->time_to_eat <= 0 || simu->time_to_eat > MAX_EAT_TIME)
 		return (error_msg("You cannot have a 'time_to_eat' value " \
-			"less or equal than 0 or greater than " \
-			STRI(MAX_TIME) ".\n", ARGUMENT_ERROR));
-	else if (simu->time_to_sleep <= 0 || simu->time_to_sleep > MAX_TIME)
+			"less or equal than 0 or greater than 10000.\n", \
+				ARGUMENT_ERROR));
+	else if (simu->time_to_sleep <= 0 || simu->time_to_sleep > MAX_SLEEP_TIME)
 		return (error_msg("You cannot have a 'time_to_sleep' value " \
-			" less or equal than 0 or greater than " \
-			STRI(MAX_TIME) ".\n", ARGUMENT_ERROR));
+			" less or equal than 0 or greater than 10000.\n", \
+				ARGUMENT_ERROR));
 	return (check_param_validity_next(simu));
 }
 

@@ -10,9 +10,9 @@ PATH_OBJ	=	objs
 
 # List of sources
 SRCS_FILES	=	activity.c eat_enough_listener.c end_simu_listener.c init_philosopher.c init_simulation.c log.c monitor.c philosopher.c time.c utils.c
-SRCS		=	$(addprefix $(PATH_SRC)/, $(SRCS_FILES)) main.c
-INC_FILES	=	$(shell find $(PATH_INC) -type f | cut -d/ -f2- )
+INC_FILES	=	philo_bonus.h
 
+SRCS		=	$(addprefix $(PATH_SRC)/, $(SRCS_FILES)) main.c
 OBJS		=	$(addprefix $(PATH_OBJ)/, $(SRCS:.c=.o))
 INCS		=	$(addprefix $(PATH_INC)/, $(INC_FILES))
 
